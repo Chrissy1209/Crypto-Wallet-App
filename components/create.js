@@ -64,6 +64,7 @@ export const CreateScreen = ({ navigation }) => {
 }
 
 export const CreateScreen2 = ({ navigation, route }) => {
+  console.log('test');
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       {/* <Text style={{ fontSize: 30 }}>{route.params.phrase}</Text> */}
