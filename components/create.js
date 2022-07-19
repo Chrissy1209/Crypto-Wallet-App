@@ -64,37 +64,46 @@ export const CreateScreen = ({ navigation }) => {
 }
 
 export const CreateScreen2 = ({ navigation, route }) => {
+  const [phrase, setPhrase] = useState(route.params.phrase.split(" "))
+  const [check, setCheck] = useState('')
+  console.log(phrase)
+
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      {/* <Text style={{ fontSize: 30 }}>{route.params.phrase}</Text> */}
-      <Button 
-        onPress={() => {
-          navigation.goBack() 
-          navigation.goBack()
-          navigation.navigate("Account", {addr: route.params.address})
-        }} 
-        title="Close" 
-      />
+    <View style={styles.container}>
+      <View style={{flex: 2, alignItems:'center'}}>
+        <Text style={[styles.titleText, {fontSize: 24}]}>確認您已經備份的註記詞</Text>
+      </View>
+      <View style={{flex: 4, alignItems:'center', justifyContent:'flex-start'}}>
+        <Text>{check}</Text>
+      </View>
+      <View style={{ flex: 5, justifyContent: 'center', flexWrap: 'wrap-reverse', flexDirection: 'row'}}>
+        {
+          phrase.map((e, index)=>{
+            return ( //2196F3
+              <Text onPress={()=>{
+                setCheck((pre)=>{
+                  return [...pre, e]
+                })
+                console.log(e)
+              }} key={index} style={{ borderColor: "gray", color:"#2196F3", width: "45%", backgroundColor: "#fff", borderRadius:4, paddingVertical: 3, paddingHorizontal: 7, margin: 3, borderWidth: 1, fontSize: 22, textAlign: 'center' }}>{e}</Text>
+            )
+          })
+        }
+      </View>
+      <View style={{ flex:1, paddingVertical: 14 }}>
+        <Button 
+          onPress={() => {
+            navigation.goBack() 
+            navigation.goBack()
+            navigation.navigate("Account", {addr: route.params.address})
+          }} 
+          title="完成" 
+        />
+        </View>
     </View>
   )
 }
 
-export const CreateScreen3 = ({ navigation }) => {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={{ fontSize: 30 }}>創建錢包3</Text>
-      <Button 
-        onPress={() => {
-          // navigation.goBack()
-          // navigation.goBack() 
-          // navigation.navigate("Account")
-          navigation.navigate("Home")
-        }} 
-          title="Close" 
-      />
-    </View>
-  )
-}
 
 const styles = StyleSheet.create({
   container: {

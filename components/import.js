@@ -19,7 +19,7 @@ export default function Import({ navigation }) {
   const HandleSubmit = () => {
     try {
       let mnemonic = "insect clutch budget nominee consider cradle chef slam soap spoil man rotate"
-      let mnemonicWallet = ethers.Wallet.fromMnemonic(phrase);
+      let mnemonicWallet = ethers.Wallet.fromMnemonic(mnemonic);
       
       navigation.goBack()
       navigation.navigate('Account', {addr: mnemonicWallet.address})
@@ -35,7 +35,7 @@ export default function Import({ navigation }) {
         <Text style={styles.titleText}>Your Secret Recovery Phrase</Text>
       </View>
       <View style={{ flex: 4, paddingTop: 28 }}>
-        <Text style={{ fontSize: 19 }}>註記詞將可協助您用更簡單的方式備份帳戶資訊。{"\n\n"}輸入註記詞以恢復您的錢包。{"\n"}</Text>
+        <Text style={{ fontSize: 19 }}>助記詞一般由12、15、18、21個{"\n"}英文單詞構成。{"\n\n"}輸入您的註記詞以恢復錢包。{"\n"}</Text>
         <View style={{ flex:4, justifyContent: "center", alignItems: 'center'}}>
           <TextInput
             multiline
