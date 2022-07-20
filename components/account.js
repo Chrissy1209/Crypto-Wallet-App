@@ -1,5 +1,5 @@
 // import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Button, Alert, Text, Image } from 'react-native';
+import { StyleSheet, View, Button, TouchableOpacity, Text, Image } from 'react-native';
 import { useState, useEffect } from 'react';
 import "react-native-get-random-values"
 import "@ethersproject/shims"
@@ -33,8 +33,10 @@ export default function Account({ route }) {
   return (
     <View style={styles.container}>
       <View style={{ flex: 1, alignItems: 'flex-end', flexDirection: "row" }}>
-        <Text onPress={handleCopy} style={{ marginRight: 1, fontSize: 18, fontWeight: "400" }}>{address.substring(0, 5)}...{address.substring(38, 42)}</Text>
-        <Image style={{ height:20, width: 20, }} source={require('../assets/copy.png')}></Image>
+        <Text style={{ marginRight: 1, fontSize: 18, fontWeight: "400" }}>{one}...{two}</Text>
+        <TouchableOpacity onPress={handleCopy}>
+          <Image style={{ height:20, width: 20, }} source={require('../assets/copy.png')}></Image>
+        </TouchableOpacity>
       </View>
       <Text style={{ fontSize: 18, paddingVertical: 10, }}>-------------------</Text>
       <View style={{ flex: 2 }}>
