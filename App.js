@@ -9,7 +9,7 @@ import ImportScreen from "./components/import";
 import AccountScreen from "./components/account"
 
 
-function HomeScreen({ navigation }) {
+function RegisterScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.title}>
@@ -47,25 +47,37 @@ function HomeScreen({ navigation }) {
 
 const RootStack = createStackNavigator();
 const CreateStack = createStackNavigator();
+const Register = createStackNavigator();
+const ImportStack = createStackNavigator();
+
+const RegisterStackScreen = () => (
+  <Register.Navigator screenOptions={{ title: "註冊錢包" }}>
+    <Register.Screen name='RegisterScreen' component={RegisterScreen} options={{ headerBackTitle: "X" }}/>
+  </Register.Navigator>
+)
 
 const CreateStackScreen = () => (
   <CreateStack.Navigator screenOptions={{ title: "創建錢包" }}>
     {/* headerShown: false, ...createStackNavigator.ModalPresentationIOS */}
-    <CreateStack.Screen name='Create1' component={CreateScreen} options={{ headerBackTitle: "" }}/>
+    <CreateStack.Screen name='Create1' component={CreateScreen} options={{ headerBackTitle: "X" }}/>
     <CreateStack.Screen name="Create2" component={CreateScreen2} options={{ headerBackTitle: "" }}/>
   </CreateStack.Navigator>
 )
 
-export default function App() {
-  const [login, setLongin] = useState(false)
+const ImportStackScreen = () => (
+  <ImportStack.Navigator screenOptions={{ title: "匯入錢包" }}>
+    <ImportStack.Screen name='ImportScreen' component={ImportScreen} options={{ headerBackTitle: "X" }}/>
+  </ImportStack.Navigator>
+)
 
+export default function App() {
   return (
     <NavigationContainer>
       <RootStack.Navigator>
-        <RootStack.Screen name="Home" component={HomeScreen} options={{ title: " " }} />
-        <RootStack.Screen name="Create" component={CreateStackScreen} options={{ headerShown: false, presentation: 'modal', }} />
-        <RootStack.Screen name="Import" component={ImportScreen} options={{ title: "匯入錢包", headerBackTitle: "" }}/>
         <RootStack.Screen name="Account" component={AccountScreen} options={{ title: "我的錢包", headerBackTitle: "" }}/>
+        <RootStack.Screen name="Register" component={RegisterStackScreen} options={{ headerShown: false, presentation: 'modal', }} />
+        <RootStack.Screen name="Create" component={CreateStackScreen} options={{ headerShown: false, presentation: 'modal', }} />
+        <RootStack.Screen name="Import" component={ImportStackScreen} options={{ headerShown: false, presentation: 'modal', }}/>
       </RootStack.Navigator>
     </NavigationContainer>
   );
