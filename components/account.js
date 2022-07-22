@@ -45,8 +45,8 @@ export default function Account({ navigation, route }) {
   const renderRegister = () => {
     return (
       <View style={styles.container}>
-        <Text style={{fontSize: 19}}>還沒有帳戶嗎？</Text>
-        <Button title='註冊' onPress={()=>{navigation.navigate("Register")}}></Button>
+        <Text style={{fontSize: 19}}>歡迎來到 Chrissy Wallet.</Text>
+        <Button title='開始使用' onPress={()=>{navigation.navigate("Register")}}></Button>
       </View>
     )
   }
