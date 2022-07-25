@@ -3,11 +3,15 @@ import { StyleSheet, Text, View, SafeAreaView, Button, Modal } from 'react-nativ
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useState } from 'react';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import { CreateScreen, CreateScreen2 } from './components/create'
 import ImportScreen from "./components/import";
 import AccountScreen from "./components/account"
 
+const renderIcon = () => (
+  <MaterialIcons onPress={()=>{navigation.goBack()}} name="close" size={0} color="black" />
+)
 
 function RegisterScreen({ navigation }) {
   return (
@@ -19,7 +23,7 @@ function RegisterScreen({ navigation }) {
         <View style={styles.box}>
 
           <View style={{flex: 1, justifyContent: 'flex-end' }}>
-            <Text style={styles.boxText}>創建錢包</Text>
+            <Text style={styles.boxText}>我是新用戶，創建錢包</Text>
           </View>
           <View style={{flex: 1, justifyContent: 'center', marginBottom: 10 }}>
             <Text style={styles.boxSubText}>Create a new Wallet</Text>
@@ -45,17 +49,18 @@ function RegisterScreen({ navigation }) {
   );
 }
 
+//-------------
+
 const RootStack = createStackNavigator();
 const CreateStack = createStackNavigator();
 const Register = createStackNavigator();
 const ImportStack = createStackNavigator();
 
 const RegisterStackScreen = () => (
-  <Register.Navigator screenOptions={{ title: "註冊錢包" }}>
-    <Register.Screen name='RegisterScreen' component={RegisterScreen} options={{ headerBackTitle: "X" }}/>
+  <Register.Navigator screenOptions={{ title: " " }}>
+    <Register.Screen name='RegisterScreen' component={RegisterScreen} options={{ headerTransparent: false, headerBackTitle: "X", }}/>
   </Register.Navigator>
 )
-
 const CreateStackScreen = () => (
   <CreateStack.Navigator screenOptions={{ title: "創建錢包" }}>
     {/* headerShown: false, ...createStackNavigator.ModalPresentationIOS */}
@@ -63,7 +68,6 @@ const CreateStackScreen = () => (
     <CreateStack.Screen name="Create2" component={CreateScreen2} options={{ headerBackTitle: "" }}/>
   </CreateStack.Navigator>
 )
-
 const ImportStackScreen = () => (
   <ImportStack.Navigator screenOptions={{ title: "匯入錢包" }}>
     <ImportStack.Screen name='ImportScreen' component={ImportScreen} options={{ headerBackTitle: "X" }}/>

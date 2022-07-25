@@ -18,15 +18,15 @@ export default function Account({ navigation, route }) {
     else {
       setAddress(route.params.addr)
       setPage('account')
-      handleGetBalance(address)
+      handleGetBalance(route.params.addr)
     } 
 
   }, [route])
   
-  const handleGetBalance = async (add) => {
+  const handleGetBalance = async (addr) => {
     try {
       const provider = new ethers.providers.JsonRpcProvider("https://rinkeby.infura.io/v3/ab0bba1edd7c44b28fdf159193f938f2");
-      const b = await provider.getBalance(address) //fetch the balance
+      const b = await provider.getBalance(addr) //fetch the balance
       console.log("----------" +b)
       setBalance(ethers.utils.formatEther(b))   
     } 
@@ -45,8 +45,8 @@ export default function Account({ navigation, route }) {
   const renderRegister = () => {
     return (
       <View style={styles.container}>
-        <Text style={{fontSize: 19}}>還沒有帳戶嗎？</Text>
-        <Button title='註冊' onPress={()=>{navigation.navigate("Register")}}></Button>
+        <Text style={{fontSize: 19}}>歡迎來到 Chrissy Wallet.</Text>
+        <Button title='開始使用' onPress={()=>{navigation.navigate("Register")}}></Button>
       </View>
     )
   }
