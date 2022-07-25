@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 import { useState, useEffect } from 'react';
 import "react-native-get-random-values"
 import "@ethersproject/shims"
@@ -65,28 +65,65 @@ export const CreateScreen = ({ navigation }) => {
 
 export const CreateScreen2 = ({ navigation, route }) => {
   const phrase = route.params.phrase.split(" ")
-  const [check, setCheck] = useState('')
+  const [check, setCheck] = useState([])
 
   return (
-    <View style={styles.container}>
-      <View style={{flex: 2, alignItems:'center'}}>
+    <View style={[styles.container, {paddingHorizontal: 40}]}>
+      <View style={{flex: 1, alignItems:'center'}}>
         <Text style={[styles.titleText, {fontSize: 24}]}>確認您已經備份的註記詞</Text>
       </View>
-      <View style={{ flex: 4, alignItems:'center', justifyContent:'flex-start'}}>
-        <Text style={{ fontSize: 19, }}>{check}</Text>
-      </View>
-      <View style={styles.boxContainer}>
+      <View style={[styles.boxContainer, {marginTop: 15, flexWrap: 'wrap', alignItems:'center'}]}>
         {
-          phrase.map((e, index)=>(
-            <Text 
-              onPress={() => {
-                setCheck((pre) => [...pre, e])
+          check.map((e, index) => ( 
+            <Text
+              key={index} 
+              style={[styles.box, 
+              {
+                color: '#2196F3',
+                borderColor:'#2196F3', 
+                borderWidth: 1,
+                backgroundColor: "#EDEDED", 
+                paddingVertical: 5
+              }]}
+              onPress={()=>{
+                setCheck(check.slice(0, check.indexOf(e)))
+                // setCheck(()=>{
+                //   delete check[check.indexOf(e)]
+                // })
               }}
-              key={index}
-              style={styles.box}
-            >
-            {e}</Text>
+            >{e}</Text>
           ))
+        }
+      </View>
+      <View style={[styles.boxContainer,]}>
+        {
+          phrase.map((e, index) => {
+            if(check.indexOf(e) != -1) 
+            {
+              return ( 
+                <View key={index} style={styles.box}>
+                  <Button
+                    disabled
+                    title={e}
+                    onPress={() => {
+                      setCheck((pre) => [...pre, e])
+                    }}
+                  />
+                </View>  
+              )
+            } else {
+              return ( 
+                <View key={index} style={styles.box}>
+                  <Button
+                    title={e}
+                    onPress={() => {
+                      setCheck((pre) => [...pre, e])
+                    }}
+                  />
+                </View>
+              )
+            }
+          })
         }
       </View>
       <View style={styles.btn}>
@@ -123,12 +160,13 @@ const styles = StyleSheet.create({
     paddingTop: 28 
   },
   phraseText: { 
-    padding: 20,
-    backgroundColor:"#fff",
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    backgroundColor: "#fff",
     color: "gray",
     textAlign:'center',
     fontSize: 20,
-    borderRadius:10,
+    borderRadius: 10,
     borderWidth: 1,
   },
   nonPhraseText: { 
@@ -137,27 +175,22 @@ const styles = StyleSheet.create({
     fontSize: 20 
   },
   boxContainer: { 
-    flex: 5, 
+    flex: 4,
+    marginHorizontal: -30,
     justifyContent: 'center', 
     flexWrap: 'wrap-reverse', 
     flexDirection: 'row'
   },
   box: { 
     backgroundColor: "#fff", 
-    borderColor: "gray", 
-    borderRadius:4, 
-    borderWidth: 1, 
-    color:"#2196F3", 
-    width: "45%", 
-    paddingVertical: 3, 
-    paddingHorizontal: 7, 
-    margin: 3, 
-    fontSize: 22, 
+    borderRadius: 8,
+    width: "30%", 
+    margin: 4,
+    fontSize: 18,
     textAlign: 'center' 
   },
   btn: { 
     flex:1, 
     paddingVertical: 14 
   },
-
 })
