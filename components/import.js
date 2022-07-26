@@ -22,7 +22,7 @@ export default function Import({ navigation }) {
       let mnemonicWallet = ethers.Wallet.fromMnemonic(mnemonic);
       
       navigation.goBack()
-      navigation.navigate('Account', {addr: mnemonicWallet.address})
+      navigation.navigate('Home', {addr: mnemonicWallet.address, mnem: mnemonic})
     }
     catch(err) {
       setErrMes(true)

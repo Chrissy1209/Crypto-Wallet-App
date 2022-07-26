@@ -9,11 +9,13 @@ export default function Account({ navigation, route }) {
   const [page, setPage] = useState("")
   const [balance, setBalance] = useState(0)
   const [address, setAddress] = useState('')
+  const [mnemonic, setMnemonic] = useState('')
 
   useEffect(()=>{
     if(route.params == undefined) setPage("register")
     else {
       setAddress(route.params.addr)
+      setMnemonic(route.params.mnem)
       setPage('account')
       getBalance(route.params.addr)
     } 
@@ -45,7 +47,7 @@ export default function Account({ navigation, route }) {
   return (
     <View style={styles.container}>
       { page=="register" && renderRegister() }
-      { page=="account" && <MyAccount address={address} balance={balance}/> }
+      { page=="account" && <MyAccount address={address} balance={balance} mnemonic={mnemonic} /> }
     </View>
   );
 }
