@@ -1,13 +1,12 @@
 // import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, Button, Modal } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useState } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { CreateScreen, CreateScreen2 } from './components/create'
-import ImportScreen from "./components/import";
-import AccountScreen from "./components/account"
+import ImportScreen from "./components/import"
+import AccountScreen from "./components/home"
 
 const renderIcon = () => (
   <MaterialIcons onPress={()=>{navigation.goBack()}} name="close" size={0} color="black" />
@@ -78,7 +77,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <RootStack.Navigator>
-        <RootStack.Screen name="Account" component={AccountScreen} options={{ title: "我的錢包", headerBackTitle: "" }}/>
+        <RootStack.Screen name="Home" component={AccountScreen} options={{ title: "我的錢包", headerBackTitle: "" }}/>
         <RootStack.Screen name="Register" component={RegisterStackScreen} options={{ headerShown: false, presentation: 'modal', }} />
         <RootStack.Screen name="Create" component={CreateStackScreen} options={{ headerShown: false, presentation: 'modal', }} />
         <RootStack.Screen name="Import" component={ImportStackScreen} options={{ headerShown: false, presentation: 'modal', }}/>

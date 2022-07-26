@@ -77,8 +77,8 @@ export const CreateScreen2 = ({ navigation, route }) => {
           check.map((e, index) => ( 
             <Text
               key={index} 
-              style={[styles.box, 
-              {
+              style={[
+                styles.box, {
                 color: '#2196F3',
                 borderColor:'#2196F3', 
                 borderWidth: 1,
@@ -95,11 +95,10 @@ export const CreateScreen2 = ({ navigation, route }) => {
           ))
         }
       </View>
-      <View style={[styles.boxContainer,]}>
+      <View style={styles.boxContainer}>
         {
           phrase.map((e, index) => {
-            if(check.indexOf(e) != -1) 
-            {
+            if(check.indexOf(e) != -1) {
               return ( 
                 <View key={index} style={styles.box}>
                   <Button
@@ -131,7 +130,7 @@ export const CreateScreen2 = ({ navigation, route }) => {
           onPress={() => {
             navigation.goBack() 
             navigation.goBack()
-            navigation.navigate("Account", {addr: route.params.address})
+            navigation.navigate("Home", {addr: route.params.address})
           }} 
           title="完成"
         />
