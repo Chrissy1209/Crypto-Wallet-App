@@ -23,7 +23,6 @@ export const CreateScreen = ({ navigation }) => {
     setAddress(wallet.address)
     console.log('mnemonic:', wallet.mnemonic.phrase)
     setPhrase(wallet.mnemonic.phrase)
-    console.log("My phrase = " + phrase)
     console.log('privateKey:', wallet.privateKey)
   }
 
@@ -130,7 +129,7 @@ export const CreateScreen2 = ({ navigation, route }) => {
           onPress={() => {
             navigation.goBack() 
             navigation.goBack()
-            navigation.navigate("Home", {addr: route.params.address})
+            navigation.navigate("Home", {addr: route.params.address, mnem: route.params.phrase})
           }} 
           title="完成"
         />

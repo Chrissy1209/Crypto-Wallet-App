@@ -34,36 +34,41 @@ export default function Account({ address, balance, mnemonic }) {
 
   return (
     <View style={styles.container}>
-      <View style={{alignItems: 'center'}}>
-        <Text style={{ marginRight: 1, fontSize: 28 }}>Account 1</Text>
+      <View style={styles.accoContainer}>
+        <Text style={{ fontSize: 28 }}>Account 1</Text>
+        <View style={styles.addressBox}>
+          <Text style={styles.address}>{one}...{two}</Text>
+          <TouchableOpacity onPress={handleCopy}>
+            <Feather name="copy" size={19} color="dimgray" />
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={{ flexDirection: "row", alignItems: 'flex-end', justifyContent: 'center', paddingBottom: 20, paddingTop: 10}}>
-        <Text style={{ color: 'dimgray', fontSize: 16, marginRight: 3}}>{one}...{two}</Text>
-        <TouchableOpacity onPress={handleCopy}>
-          <Feather name="copy" size={19} color="dimgray" />
-        </TouchableOpacity>
-      </View>
-  
-      <View style={{ borderTopWidth: 1, borderColor: 'gray', paddingTop: 25, }}>
+      {/* ---------------- */}
+      <View style={styles.subContainer}>
         <View style={styles.etherIcon}>
           <MaterialCommunityIcons name="ethereum" size={44} color="black" />
         </View>
         <Text style={styles.balanceText}>{balance==0 ? 0 : balance} RinkebyETH</Text>
+        {/* ---------------- */}
         <View style={styles.iconContainer}>
           <View style={styles.iconBox}>
-            <MaterialIcons name="file-download" size={38} color="#FFF" />
+            <TouchableOpacity style={styles.icon}>
+              <MaterialIcons name="file-download" size={38} color="#FFF" />
+            </TouchableOpacity>
+            <Text style={styles.iconText}>買</Text>
           </View>
-          <TouchableOpacity onPress={sendTransation} style={styles.iconBox}>
-            <Feather name="arrow-up-right" size={38} color="#FFF" />
-          </TouchableOpacity>
           <View style={styles.iconBox}>
-            <MaterialIcons name="swap-horiz" size={38} color="#FFF" />
+            <TouchableOpacity onPress={sendTransation} style={styles.icon}>
+              <Feather name="arrow-up-right" size={38} color="#FFF" />
+            </TouchableOpacity>
+            <Text style={[styles.iconText]}>發送</Text>
           </View>
-        </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly'}}>
-          <Text style={styles.iconText}>買</Text>
-          <Text style={styles.iconText}>發送</Text>
-          <Text style={styles.iconText}>交換</Text>
+          <View style={styles.iconBox}>
+            <TouchableOpacity style={styles.icon}>
+              <MaterialIcons name="swap-horiz" size={38} color="#FFF" />
+            </TouchableOpacity>
+            <Text style={styles.iconText}>交換</Text>
+          </View>
         </View>
       </View>
     </View>
@@ -78,9 +83,27 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 10,
   },
+  accoContainer: { 
+    alignItems: 'center' 
+  },
+  addressBox: { 
+    flexDirection: "row", 
+    paddingBottom: 20, 
+    paddingTop: 10 
+  },
+  address: { 
+    color: 'dimgray', 
+    fontSize: 16, 
+    marginRight: 3 
+  },
+  subContainer: { 
+    borderTopWidth: 1, 
+    borderColor: 'gray', 
+    paddingTop: 25,
+  },
   etherIcon: {
-    alignItems:'center', 
-    paddingVertical: 11
+    alignItems:'center',
+    paddingVertical: 11,
   },
   balanceText: { 
     textAlign:'center', 
@@ -91,21 +114,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     justifyContent: 'space-evenly', 
     paddingTop: 35,
-    paddingBottom: 7, 
   },
-  iconBox: {
+  iconBox: { 
+    width: 48,  
+  },
+  icon: {
     alignItems: 'center', 
     justifyContent: 'center',
     backgroundColor: "#2196F3", 
     borderRadius: 50, 
     height: 48, 
-    width: 48, 
   },
   iconText: {
     color: '#2196F3',
     textAlign: 'center',
-    width: 48, 
     fontWeight: '500',
-    fontSize: 17
+    fontSize: 17,
+    paddingTop: 7,
   },
 });
