@@ -14,7 +14,7 @@ export const CreateScreen = ({ navigation }) => {
 
   useEffect(()=>{
     console.log("useEffect . . .")
-    action()
+    // action()
   }, [])
   const action = () => {
     const wallet = ethers.Wallet.createRandom()
@@ -33,9 +33,9 @@ export const CreateScreen = ({ navigation }) => {
       <View style={styles.title}>
         <Text style={styles.titleText}>Your Secret Recovery Phrase</Text>
       </View>
-      <View style={styles.subTitle}>
+      <View style={styles.subContainer}>
         <Text style={{ fontSize: 19 }}>註記詞將可協助您用更簡單的方式備份帳戶資訊。{"\n\n"}警告：絕對不要洩漏您的註記詞。{"\n"}任何人得知註記詞代表他可以竊取您所有的代幣。{"\n"}</Text>
-        <View style={{ flex:4, justifyContent: "center" }}>
+        <View style={styles.phraseContainer}>
         {
           declaratoin ? 
             <Text style={styles.phraseText}>{phrase}</Text>
@@ -67,30 +67,24 @@ export const CreateScreen2 = ({ navigation, route }) => {
   const [check, setCheck] = useState([])
 
   return (
-    <View style={[styles.container, {paddingHorizontal: 40}]}>
+    <View style={[styles.container, { paddingHorizontal: 40 }]}>
       <View style={{flex: 1, alignItems:'center'}}>
-        <Text style={[styles.titleText, {fontSize: 24}]}>確認您已經備份的註記詞</Text>
+        <Text style={[styles.titleText, { fontSize: 24 }]}>確認您已經備份的註記詞</Text>
       </View>
-      <View style={[styles.boxContainer, {marginTop: 15, flexWrap: 'wrap', alignItems:'center'}]}>
+      <View style={[styles.boxContainer, { flexWrap: 'wrap' }]}>
         {
           check.map((e, index) => ( 
-            <Text
-              key={index} 
-              style={[
-                styles.box, {
-                color: '#2196F3',
+            <View key={index} style={[styles.box, {
                 borderColor:'#2196F3', 
                 borderWidth: 1,
                 backgroundColor: "#EDEDED", 
-                paddingVertical: 5
-              }]}
-              onPress={()=>{
-                setCheck(check.slice(0, check.indexOf(e)))
-                // setCheck(()=>{
-                //   delete check[check.indexOf(e)]
-                // })
-              }}
-            >{e}</Text>
+              }]}>
+              <Button title={e}
+                onPress={() => {
+                  setCheck(check.slice(0, check.indexOf(e)))
+                }}
+              />
+            </View>
           ))
         }
       </View>
@@ -100,9 +94,7 @@ export const CreateScreen2 = ({ navigation, route }) => {
             if(check.indexOf(e) != -1) {
               return ( 
                 <View key={index} style={styles.box}>
-                  <Button
-                    disabled
-                    title={e}
+                  <Button disabled title={e}
                     onPress={() => {
                       setCheck((pre) => [...pre, e])
                     }}
@@ -112,8 +104,7 @@ export const CreateScreen2 = ({ navigation, route }) => {
             } else {
               return ( 
                 <View key={index} style={styles.box}>
-                  <Button
-                    title={e}
+                  <Button title={e}
                     onPress={() => {
                       setCheck((pre) => [...pre, e])
                     }}
@@ -153,9 +144,13 @@ const styles = StyleSheet.create({
     fontWeight: "500", 
     fontSize: 32 
   },
-  subTitle: { 
+  subContainer: { 
     flex: 4, 
     paddingTop: 28 
+  },
+  phraseContainer: { 
+    flex:4, 
+    justifyContent: "center", 
   },
   phraseText: { 
     paddingVertical: 20,
@@ -173,22 +168,22 @@ const styles = StyleSheet.create({
     fontSize: 20 
   },
   boxContainer: { 
-    flex: 4,
-    marginHorizontal: -30,
-    justifyContent: 'center', 
+    flex: 5,
+    flexDirection: 'row',
     flexWrap: 'wrap-reverse', 
-    flexDirection: 'row'
+    alignItems: 'center',
+    justifyContent: 'center', 
+    marginTop: 10,
+    marginHorizontal: -30,
   },
   box: { 
     backgroundColor: "#fff", 
     borderRadius: 8,
     width: "30%", 
     margin: 4,
-    fontSize: 18,
-    textAlign: 'center' 
   },
   btn: { 
-    flex:1, 
+    flex: 1, 
     paddingVertical: 14 
   },
 })
