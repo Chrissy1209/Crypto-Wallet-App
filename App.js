@@ -6,7 +6,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import { CreateScreen, CreateScreen2 } from './components/create'
 import ImportScreen from "./components/import"
-import AccountScreen from "./components/home"
+import HomeScreen from "./components/home"
 
 const renderIcon = () => (
   <MaterialIcons onPress={()=>{navigation.goBack()}} name="close" size={0} color="black" />
@@ -16,27 +16,19 @@ function RegisterScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.title}>
-        <Text style={styles.titleText}>Welcome</Text>
+        <Text style={styles.titleText}>第一次拜訪 CWallet ?</Text>
       </View>
       <View style={{ flex: 5 }}>
         <View style={styles.box}>
-
-          <View style={{flex: 1, justifyContent: 'flex-end' }}>
-            <Text style={styles.boxText}>我是新用戶，創建錢包</Text>
-          </View>
-          <View style={{flex: 1, justifyContent: 'center', marginBottom: 10 }}>
-            <Text style={styles.boxSubText}>Create a new Wallet</Text>
-          </View>
-          <View style={{flex: 1, justifyContent: 'flex-start'}}>
-            <Button
-              onPress={() => navigation.navigate('Create')}
-              title="好，我們開始吧！"
-            />
-          </View>
-
+          <Text style={styles.boxText}>我是新用戶，創建錢包</Text>
+          <Text style={styles.boxSubText}>Create a new Wallet</Text>
+          <Button
+            onPress={() => navigation.navigate('Create')}
+            title="好，我們開始吧！"
+          />
         </View>
         <View style={styles.box}>
-          <Text style={styles.boxText}>我已經有註記詞</Text>
+          <Text style={styles.boxText}>不，我已經有註記詞</Text>
           <Text style={styles.boxSubText}>Import your Secret Recovery Phrase</Text>
           <Button
             onPress={() => navigation.navigate('Import')}
@@ -77,7 +69,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <RootStack.Navigator>
-        <RootStack.Screen name="Home" component={AccountScreen} options={{ title: "我的錢包", headerBackTitle: "" }}/>
+        <RootStack.Screen name="Home" component={HomeScreen} options={{ title: "我的錢包", headerBackTitle: "" }}/>
         <RootStack.Screen name="Register" component={RegisterStackScreen} options={{ headerShown: false, presentation: 'modal', }} />
         <RootStack.Screen name="Create" component={CreateStackScreen} options={{ headerShown: false, presentation: 'modal', }} />
         <RootStack.Screen name="Import" component={ImportStackScreen} options={{ headerShown: false, presentation: 'modal', }}/>
@@ -89,7 +81,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: '#fff',
     alignItems: 'center',
   },
   title: { 
@@ -98,7 +89,7 @@ const styles = StyleSheet.create({
   },
   titleText: { 
     color: "#000", 
-    fontSize: 34, 
+    fontSize: 25, 
     fontWeight: '500' 
   },
   box: { 
@@ -124,4 +115,3 @@ const styles = StyleSheet.create({
     color: "#828282" 
   },
 });
-
