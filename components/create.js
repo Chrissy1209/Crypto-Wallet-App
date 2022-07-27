@@ -13,7 +13,6 @@ export const CreateScreen = ({ navigation }) => {
 //---------------
 
   useEffect(()=>{
-    console.log("useEffect . . .")
     // action()
   }, [])
   const action = () => {
@@ -81,7 +80,9 @@ export const CreateScreen2 = ({ navigation, route }) => {
               }]}>
               <Button title={e}
                 onPress={() => {
-                  setCheck(check.slice(0, check.indexOf(e)))
+                  let one = check.slice(0, check.indexOf(e))
+                  let two = check.slice(check.indexOf(e)+1, check.length)
+                  setCheck(() => [...one, ...two])
                 }}
               />
             </View>
@@ -94,11 +95,7 @@ export const CreateScreen2 = ({ navigation, route }) => {
             if(check.indexOf(e) != -1) {
               return ( 
                 <View key={index} style={styles.box}>
-                  <Button disabled title={e}
-                    onPress={() => {
-                      setCheck((pre) => [...pre, e])
-                    }}
-                  />
+                  <Button disabled title={e} />
                 </View>  
               )
             } else {
@@ -116,14 +113,24 @@ export const CreateScreen2 = ({ navigation, route }) => {
         }
       </View>
       <View style={styles.btn}>
-        <Button 
-          onPress={() => {
-            navigation.goBack() 
-            navigation.goBack()
-            navigation.navigate("Home", {addr: route.params.address, mnem: route.params.phrase})
-          }} 
-          title="完成"
-        />
+        {
+          check.length == phrase.length
+          ?
+          <Button 
+            onPress={() => {
+              console.log(check === phrase)
+              console.log("phrase = " + phrase)
+              console.log("check = "+ check)
+              if(check != phrase) {
+                navigation.goBack() 
+                navigation.goBack()
+                navigation.navigate("Home", {addr: route.params.address, mnem: route.params.phrase})
+              }
+            }} 
+            title="完成"
+          /> 
+          : <Button disabled title="完成" /> 
+        }
       </View>
     </View>
   )
