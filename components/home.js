@@ -5,7 +5,7 @@ import "@ethersproject/shims"
 import { ethers } from "ethers";
 import MyAccount from "./account"
 
-export default function Account({ navigation, route }) {
+export default function Home({ navigation, route }) {
   const [page, setPage] = useState("")
   const [balance, setBalance] = useState(0)
   const [address, setAddress] = useState('')

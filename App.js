@@ -6,7 +6,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import { CreateScreen, CreateScreen2 } from './components/create'
 import ImportScreen from "./components/import"
-import AccountScreen from "./components/home"
+import HomeScreen from "./components/home"
 
 const renderIcon = () => (
   <MaterialIcons onPress={()=>{navigation.goBack()}} name="close" size={0} color="black" />
@@ -69,7 +69,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <RootStack.Navigator>
-        <RootStack.Screen name="Home" component={AccountScreen} options={{ title: "我的錢包", headerBackTitle: "" }}/>
+        <RootStack.Screen name="Home" component={HomeScreen} options={{ title: "我的錢包", headerBackTitle: "" }}/>
         <RootStack.Screen name="Register" component={RegisterStackScreen} options={{ headerShown: false, presentation: 'modal', }} />
         <RootStack.Screen name="Create" component={CreateStackScreen} options={{ headerShown: false, presentation: 'modal', }} />
         <RootStack.Screen name="Import" component={ImportStackScreen} options={{ headerShown: false, presentation: 'modal', }}/>
