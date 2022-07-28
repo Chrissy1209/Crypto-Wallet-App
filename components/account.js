@@ -9,21 +9,18 @@ import { ethers } from "ethers";
 
 export default function Account({ address, mnemonic, balance }) {
   const [page, setPage] = useState('account')
+  const [amount, setAmount] = useState('')
   var one = address.substring(0, 5)
   var two = address.substring(38, 42)
 
-  useEffect(()=> {
-    // let mnemonicWallet = ethers.Wallet.fromMnemonic(mnemonic)
-    // console.log(mnemonicWallet.privateKey)
-
-  })
-
+  const handleAmount = (e) => {
+    if (e === '' || /^\d*\.?\d*$/.test(e)) setAmount(e)
+  }
   const handleCopy = () => {
     Clipboard.setString(address);
   }
-  
   const sendTransation = () => {
-    setPage("send")
+    // setPage("send")
   
     // let mnemonicWallet = ethers.Wallet.fromMnemonic(mnemonic)
     // console.log(mnemonicWallet.privateKey)
@@ -31,69 +28,93 @@ export default function Account({ address, mnemonic, balance }) {
     // const provider = new ethers.providers.JsonRpcProvider("https://rinkeby.infura.io/v3/ab0bba1edd7c44b28fdf159193f938f2");
     // const wallet = new ethers.Wallet(mnemonicWallet.privateKey, provider)
 
-    // console.log(wallet)
-
+    console.log("sendTransation")
   }
 
 //----------
 
   const renderAccount = () => (
     <View>
-        <View style={styles.accoContainer}>
-          <Text style={{ fontSize: 28 }}>Account 1</Text>
-          <TouchableOpacity onPress={handleCopy}>
-            <View style={styles.addressBox}>
-              <Text style={styles.address}>{one}...{two}</Text>
-              <Feather name="copy" size={19} color="dimgray" />
-            </View>
-          </TouchableOpacity>
+      <View style={accStyles.titleContainer}>
+        <Text style={{ fontSize: 28 }}>Account 1</Text>
+        <TouchableOpacity onPress={handleCopy}>
+          <View style={accStyles.addressBox}>
+            <Text style={accStyles.address}>{one}...{two}</Text>
+            <Feather name="copy" size={19} color="dimgray" />
+          </View>
+        </TouchableOpacity>
+      </View>
+      {/* ---------------- */}
+      <View style={accStyles.subContainer}>
+        <View style={accStyles.etherIcon}>
+          <MaterialCommunityIcons name="ethereum" size={44} color="black" />
+        </View>
+        <Text style={accStyles.balanceText}>{balance==0 ? 0 : balance} RinkebyETH</Text>
+        {/* ---------------- */}
+        <View style={accStyles.iconContainer}>
+          <View style={accStyles.iconBox}>
+            <TouchableOpacity style={accStyles.icon}>
+              <MaterialIcons name="file-download" size={38} color="#FFF" />
+            </TouchableOpacity>
+            <Text style={accStyles.iconText}>買</Text>
+          </View>
+          <View style={accStyles.iconBox}>
+            <TouchableOpacity onPress={()=>{setPage("send")}} style={accStyles.icon}>
+              <Feather name="arrow-up-right" size={38} color="#FFF" />
+            </TouchableOpacity>
+            <Text style={[accStyles.iconText]}>發送</Text>
+          </View>
+          <View style={accStyles.iconBox}>
+            <TouchableOpacity style={accStyles.icon}>
+              <MaterialIcons name="swap-horiz" size={38} color="#FFF" />
+            </TouchableOpacity>
+            <Text style={accStyles.iconText}>交換</Text>
+          </View>
         </View>
         {/* ---------------- */}
-        <View style={styles.subContainer}>
-          <View style={styles.etherIcon}>
-            <MaterialCommunityIcons name="ethereum" size={44} color="black" />
-          </View>
-          <Text style={styles.balanceText}>{balance==0 ? 0 : balance} RinkebyETH</Text>
-          {/* ---------------- */}
-          <View style={styles.iconContainer}>
-            <View style={styles.iconBox}>
-              <TouchableOpacity style={styles.icon}>
-                <MaterialIcons name="file-download" size={38} color="#FFF" />
-              </TouchableOpacity>
-              <Text style={styles.iconText}>買</Text>
-            </View>
-            <View style={styles.iconBox}>
-              <TouchableOpacity onPress={sendTransation} style={styles.icon}>
-                <Feather name="arrow-up-right" size={38} color="#FFF" />
-              </TouchableOpacity>
-              <Text style={[styles.iconText]}>發送</Text>
-            </View>
-            <View style={styles.iconBox}>
-              <TouchableOpacity style={styles.icon}>
-                <MaterialIcons name="swap-horiz" size={38} color="#FFF" />
-              </TouchableOpacity>
-              <Text style={styles.iconText}>交換</Text>
-            </View>
-          </View>
-          {/* ---------------- */}
-        </View>
+      </View>
     </View> 
   )
-
   const renderSendTx = () => (
-    <View>
-      <Text onPress={()=>{ setPage("account") }} style={{textAlign:'right', fontSize: 14, color: "#007AFF"}}>取消</Text>
-      <Text style={{fontSize: 23, fontWeight: '500', textAlign: 'center', paddingBottom: 14}}>Send to</Text>
-      <TextInput placeholder='搜尋公開地址(0x)' style={{width:"100%", backgroundColor: "#fff", padding: 10}}></TextInput>
-      
-      <View style={{flexDirection:'row', justifyContent: 'flex-end'}}>
-        <Text style={{ fontWeight: '500', paddingVertical: 10, fontSize: 20, paddingTop: 50}}>資產：</Text>
-        <Text style={{ paddingVertical: 10, fontSize: 19, paddingTop: 50}}>{balance==0 ? 0 : balance} RinkebyETH</Text>
+    <View style={{flex: 1}}>
+      <Text style={sendTxStyles.titleText}>Send to</Text>
+      <TextInput placeholder='搜尋公開地址(0x)' style={{width:"100%", backgroundColor: "#fff", padding: 10}} />
+      <View style={{flex:1}}>
+        <View style={[sendTxStyles.box, { marginTop: 50 }]}>
+          <Text style={sendTxStyles.subTitle}>資產：</Text>
+          <Text style={{ fontSize: 19 }}>{balance==0 ? 0 : balance} RinkebyETH</Text>
+        </View>
+        <View style={[sendTxStyles.box, { marginVertical: 30 }]}>
+          <Text style={sendTxStyles.subTitle}>數量：</Text>
+          <TextInput 
+            keyboardType='numeric' 
+            onChangeText={handleAmount}
+            value={amount} 
+            placeholder='0' 
+            style={{ width:"10%", backgroundColor: "#fff", marginRight: 10}} 
+          />
+          <Text style={{ fontSize: 19 }}>RinkebyETH</Text>
+        </View>
+        { amount >= balance && <Text style={{color: 'red', textAlign: 'right'}}>資金不足</Text>}
       </View>
-      <View style={{flexDirection:'row', marginVertical: 10, justifyContent: 'flex-end'}}>
-        <Text style={{ fontWeight: '500', fontSize: 20, }}>數量：</Text>
-        <TextInput placeholder='0' style={{ width:"10%", backgroundColor: "#fff", marginRight: 10}}></TextInput>
-        <Text style={{ fontSize: 20, }}>RinkebyETH</Text>
+      <View style={sendTxStyles.btnContainer}>
+        <TouchableOpacity style={sendTxStyles.btn}
+          onPress={()=>{setPage('account')}} 
+        >
+          <Button
+            onPress={()=>{setPage('account')}} 
+            title='取消'
+          />
+        </TouchableOpacity>
+        <TouchableOpacity style={[sendTxStyles.btn, {backgroundColor: '#007AFF'}]}
+          onPress={sendTransation}
+        >
+          <Button 
+            onPress={sendTransation}
+            color={"#fff"} 
+            title='確認' 
+          />
+        </TouchableOpacity>
       </View>
     </View>
   )
@@ -106,15 +127,16 @@ export default function Account({ address, mnemonic, balance }) {
   )
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     // backgroundColor: '#fff',
     paddingVertical: 15,
     paddingHorizontal: 10,
-  },
-  accoContainer: { 
+  }
+})
+const accStyles = StyleSheet.create({
+  titleContainer: { 
     alignItems: 'center' 
   },
   addressBox: { 
@@ -163,4 +185,31 @@ const styles = StyleSheet.create({
     fontSize: 17,
     paddingTop: 7,
   },
+});
+const sendTxStyles = StyleSheet.create({
+  titleText: {
+    fontSize: 23, 
+    fontWeight: '500', 
+    textAlign: 'center', 
+    paddingBottom: 14,
+  },
+  box: {
+    flexDirection:'row', 
+    justifyContent: 'flex-end'
+  },
+  subTitle: { 
+    fontWeight: '500', 
+    fontSize: 20 
+  },
+  btnContainer: {
+    flexDirection:'row', 
+    justifyContent: 'space-between', 
+    marginBottom: 20, 
+  },
+  btn: {
+    borderColor:"#007AFF", 
+    borderWidth: 1, 
+    paddingHorizontal: 50, 
+    borderRadius: 18,
+},
 });
