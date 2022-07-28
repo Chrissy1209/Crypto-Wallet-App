@@ -118,10 +118,7 @@ export const CreateScreen2 = ({ navigation, route }) => {
           ?
           <Button 
             onPress={() => {
-              console.log(check === phrase)
-              console.log("phrase = " + phrase)
-              console.log("check = "+ check)
-              if(check != phrase) {
+              if(check.every((e, index) => e === phrase[index])) {
                 navigation.goBack() 
                 navigation.goBack()
                 navigation.navigate("Home", {addr: route.params.address, mnem: route.params.phrase})
