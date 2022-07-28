@@ -10,24 +10,44 @@ import { ethers } from "ethers";
 export default function Account({ address, mnemonic, balance }) {
   const [page, setPage] = useState('account')
   const [amount, setAmount] = useState('')
+  const [addressTo, setAddressTo] = useState('')
+  const [verify, setVerify] = useState("null")
   var one = address.substring(0, 5)
   var two = address.substring(38, 42)
 
+  const handleTest = (e) => {
+    setAddressTo(e)
+    if(e=='') setVerify("null")
+    else {
+      try {
+        // ethers.utils.getAddress(e);
+        setVerify("true")
+      } 
+      catch(err) { 
+        setVerify("false") 
+      }
+    } 
+  }
   const handleAmount = (e) => {
     if (e === '' || /^\d*\.?\d*$/.test(e)) setAmount(e)
   }
   const handleCopy = () => {
     Clipboard.setString(address);
   }
-  const sendTransation = () => {
-    // setPage("send")
-  
+  const sendTransation = async () => {
     // let mnemonicWallet = ethers.Wallet.fromMnemonic(mnemonic)
     // console.log(mnemonicWallet.privateKey)
 
     // const provider = new ethers.providers.JsonRpcProvider("https://rinkeby.infura.io/v3/ab0bba1edd7c44b28fdf159193f938f2");
     // const wallet = new ethers.Wallet(mnemonicWallet.privateKey, provider)
 
+    // const tx = await wallet.sendTransation({
+    //   to: addressTo,
+    //   value: ethers.utils.parseEther(amount)
+    // })
+
+    // await tx.wait()
+    // console.log(tx)
     console.log("sendTransation")
   }
 
@@ -78,44 +98,71 @@ export default function Account({ address, mnemonic, balance }) {
   const renderSendTx = () => (
     <View style={{flex: 1}}>
       <Text style={sendTxStyles.titleText}>Send to</Text>
-      <TextInput placeholder='搜尋公開地址(0x)' style={{width:"100%", backgroundColor: "#fff", padding: 10}} />
-      <View style={{flex:1}}>
-        <View style={[sendTxStyles.box, { marginTop: 50 }]}>
-          <Text style={sendTxStyles.subTitle}>資產：</Text>
-          <Text style={{ fontSize: 19 }}>{balance==0 ? 0 : balance} RinkebyETH</Text>
+      {/* <TextInput
+        onChangeText={handleTest}
+        value={addressTo}
+        placeholder='搜尋公開地址(0x)' 
+        style={{width:"100%", backgroundColor: "#fff", padding: 10}}
+      /> */}
+      {
+        verify == "true" ?
+        <View>
+          <Text>{addressTo}</Text>
+          <Text onPress={()=>{setVerify("null")}}>我是叉叉</Text>
         </View>
-        <View style={[sendTxStyles.box, { marginVertical: 30 }]}>
-          <Text style={sendTxStyles.subTitle}>數量：</Text>
-          <TextInput 
-            keyboardType='numeric' 
-            onChangeText={handleAmount}
-            value={amount} 
-            placeholder='0' 
-            style={{ width:"10%", backgroundColor: "#fff", marginRight: 10}} 
-          />
-          <Text style={{ fontSize: 19 }}>RinkebyETH</Text>
+        :
+        <TextInput
+          onChangeText={handleTest}
+          value={addressTo}
+          placeholder='搜尋公開地址(0x)' 
+          style={{width:"100%", backgroundColor: "#fff", padding: 10}}
+        />
+      }
+      { 
+        verify=="true" ? 
+        <View style={{flex:1, paddingVertical: 10}}>
+          <Text style={{color: '#36BF36'}}>偵測到新位址！</Text> 
+          <View style={{flex:1}}>
+            <View style={[sendTxStyles.box, { marginTop: 50 }]}>
+              <Text style={sendTxStyles.subTitle}>資產：</Text>
+              <Text style={{ fontSize: 19 }}>{balance==0 ? 0 : balance} RinkebyETH</Text>
+            </View>
+            <View style={[sendTxStyles.box, { marginTop: 30, marginBottom: 10 }]}>
+              <Text style={sendTxStyles.subTitle}>數量：</Text>
+              <TextInput 
+                keyboardType='numeric' 
+                onChangeText={handleAmount}
+                value={amount} 
+                placeholder='0' 
+                style={{ width:"10%", backgroundColor: "#fff", marginRight: 10}} 
+              />
+              <Text style={{ fontSize: 19 }}>RinkebyETH</Text>
+            </View>
+            { amount >= balance && <Text style={{color: 'red', textAlign: 'right'}}>資金不足</Text>}
+          </View>
+          <View style={sendTxStyles.btnContainer}>
+            <TouchableOpacity 
+              style={sendTxStyles.btn} 
+              onPress={()=>{setPage('account')}}
+            >
+              <Text style={{color:'#007AFF', fontSize: 18}}>取消</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={[sendTxStyles.btn, {backgroundColor: '#007AFF'}]}
+              onPress={sendTransation}
+            >
+              <Text style={{color:'#fff', fontSize: 18}}>確認</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        { amount >= balance && <Text style={{color: 'red', textAlign: 'right'}}>資金不足</Text>}
-      </View>
-      <View style={sendTxStyles.btnContainer}>
-        <TouchableOpacity style={sendTxStyles.btn}
-          onPress={()=>{setPage('account')}} 
-        >
-          <Button
-            onPress={()=>{setPage('account')}} 
-            title='取消'
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={[sendTxStyles.btn, {backgroundColor: '#007AFF'}]}
-          onPress={sendTransation}
-        >
-          <Button 
-            onPress={sendTransation}
-            color={"#fff"} 
-            title='確認' 
-          />
-        </TouchableOpacity>
-      </View>
+        :
+        <View style={{ paddingVertical: 10, flexDirection: 'row'}}>
+          <View style={{flex:1}}>
+            { verify=="false" && <Text style={{color: 'red'}}>接收位址錯誤</Text> }
+          </View>
+          <Text onPress={()=>setPage("account")} style={{textAlign: 'right', color: '#007AFF', paddingVertical: 10, paddingLeft: 20}}>取消</Text>
+        </View>
+      }
     </View>
   )
 
@@ -209,7 +256,9 @@ const sendTxStyles = StyleSheet.create({
   btn: {
     borderColor:"#007AFF", 
     borderWidth: 1, 
-    paddingHorizontal: 50, 
+    paddingHorizontal: 58, 
+    paddingVertical: 8,
     borderRadius: 18,
+    justifyContent: 'center',
 },
 });
