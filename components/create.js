@@ -13,7 +13,6 @@ export const CreateScreen = ({ navigation }) => {
 //---------------
 
   useEffect(()=>{
-    console.log("useEffect . . .")
     // action()
   }, [])
   const action = () => {
@@ -65,11 +64,17 @@ export const CreateScreen = ({ navigation }) => {
 export const CreateScreen2 = ({ navigation, route }) => {
   const phrase = route.params.phrase.split(" ")
   const [check, setCheck] = useState([])
+  const [warning, setWarning] = useState(false)
 
   return (
     <View style={[styles.container, { paddingHorizontal: 40 }]}>
-      <View style={{flex: 1, alignItems:'center'}}>
-        <Text style={[styles.titleText, { fontSize: 24 }]}>確認您已經備份的註記詞</Text>
+      <View style={{flex: 1, alignItems:'center',}}>
+        { 
+          warning ?
+          <Text style={[styles.titleText, { fontSize: 24, color: 'red' }]}>註記詞錯誤</Text> 
+          :
+          <Text style={[styles.titleText, { fontSize: 24 }]}>確認您已經備份的註記詞</Text>
+        }
       </View>
       <View style={[styles.boxContainer, { flexWrap: 'wrap' }]}>
         {
@@ -81,7 +86,10 @@ export const CreateScreen2 = ({ navigation, route }) => {
               }]}>
               <Button title={e}
                 onPress={() => {
-                  setCheck(check.slice(0, check.indexOf(e)))
+                  let one = check.slice(0, check.indexOf(e))
+                  let two = check.slice(check.indexOf(e)+1, check.length)
+                  setCheck(() => [...one, ...two])
+                  setWarning(false)
                 }}
               />
             </View>
@@ -94,11 +102,7 @@ export const CreateScreen2 = ({ navigation, route }) => {
             if(check.indexOf(e) != -1) {
               return ( 
                 <View key={index} style={styles.box}>
-                  <Button disabled title={e}
-                    onPress={() => {
-                      setCheck((pre) => [...pre, e])
-                    }}
-                  />
+                  <Button disabled title={e} />
                 </View>  
               )
             } else {
@@ -116,14 +120,22 @@ export const CreateScreen2 = ({ navigation, route }) => {
         }
       </View>
       <View style={styles.btn}>
-        <Button 
-          onPress={() => {
-            navigation.goBack() 
-            navigation.goBack()
-            navigation.navigate("Home", {addr: route.params.address, mnem: route.params.phrase})
-          }} 
-          title="完成"
-        />
+        {
+          check.length == phrase.length
+          ?
+          <Button 
+            onPress={() => {
+              if(check.every((e, index) => e != phrase[index])) setWarning(true) 
+              else {
+                navigation.goBack() 
+                navigation.goBack()
+                navigation.navigate("Home", {addr: route.params.address, mnem: route.params.phrase})
+              }
+            }} 
+            title="完成"
+          /> 
+          : <Button disabled title="完成" /> 
+        }
       </View>
     </View>
   )
