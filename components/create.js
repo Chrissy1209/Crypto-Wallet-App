@@ -13,7 +13,7 @@ export const CreateScreen = ({ navigation }) => {
 //---------------
 
   useEffect(()=>{
-    // action()
+    action()
   }, [])
   const action = () => {
     const wallet = ethers.Wallet.createRandom()

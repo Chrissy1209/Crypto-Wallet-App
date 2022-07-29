@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import * as Clipboard from 'expo-clipboard';
 import MyTransaction from './sendTx'
 
-export default function Account({ address, mnemonic, balance }) {
+export default function Account({ address, mnemonic, balance, setSendTx }) {
   const [page, setPage] = useState('account')
   var one = address.substring(0, 5)
   var two = address.substring(38, 42)
@@ -61,7 +61,7 @@ export default function Account({ address, mnemonic, balance }) {
   return (
     <View style={styles.container}>
       { page=="account" && renderAccount() }
-      { page=="send" && <MyTransaction address={address} balance={balance} mnemonic={mnemonic} setPage={setPage}/>  }
+      { page=="send" && <MyTransaction address={address} balance={balance} mnemonic={mnemonic} setPage={setPage} setSendTx={setSendTx} /> }
     </View>
   )
 }

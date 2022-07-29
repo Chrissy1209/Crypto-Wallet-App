@@ -10,7 +10,7 @@ import HomeScreen from "./components/home"
 
 const renderIcon = () => (
   <View style={{paddingLeft: 10}}>
-    <MaterialIcons name="close" size={24} color="black" />
+    <MaterialIcons name="close" size={24} color="#007AFF" />
   </View>
 )
 
