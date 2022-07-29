@@ -9,7 +9,9 @@ import ImportScreen from "./components/import"
 import HomeScreen from "./components/home"
 
 const renderIcon = () => (
-  <MaterialIcons onPress={()=>{navigation.goBack()}} name="close" size={0} color="black" />
+  <View style={{paddingLeft: 10}}>
+    <MaterialIcons name="close" size={24} color="black" />
+  </View>
 )
 
 function RegisterScreen({ navigation }) {
@@ -49,19 +51,19 @@ const ImportStack = createStackNavigator();
 
 const RegisterStackScreen = () => (
   <Register.Navigator screenOptions={{ title: " " }}>
-    <Register.Screen name='RegisterScreen' component={RegisterScreen} options={{ headerTransparent: false, headerBackTitle: "X", }}/>
+    <Register.Screen name='RegisterScreen' component={RegisterScreen} options={{ headerTransparent: false, headerBackTitle: " ", headerBackImage:()=>renderIcon() }}/> 
   </Register.Navigator>
 )
 const CreateStackScreen = () => (
   <CreateStack.Navigator screenOptions={{ title: "創建錢包" }}>
     {/* headerShown: false, ...createStackNavigator.ModalPresentationIOS */}
-    <CreateStack.Screen name='Create1' component={CreateScreen} options={{ headerBackTitle: "X" }}/>
+    <CreateStack.Screen name='Create1' component={CreateScreen} options={{ headerBackTitle: " ", headerBackImage:()=>renderIcon() }}/>
     <CreateStack.Screen name="Create2" component={CreateScreen2} options={{ headerBackTitle: "" }}/>
   </CreateStack.Navigator>
 )
 const ImportStackScreen = () => (
   <ImportStack.Navigator screenOptions={{ title: "匯入錢包" }}>
-    <ImportStack.Screen name='ImportScreen' component={ImportScreen} options={{ headerBackTitle: "X" }}/>
+    <ImportStack.Screen name='ImportScreen' component={ImportScreen} options={{ headerBackTitle: " ",  headerBackImage:()=>renderIcon()}}/>
   </ImportStack.Navigator>
 )
 
