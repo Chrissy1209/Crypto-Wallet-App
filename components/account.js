@@ -96,36 +96,20 @@ export default function Account({ address, mnemonic, balance }) {
     </View> 
   )
   const renderSendTx = () => (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <Text style={sendTxStyles.titleText}>Send to</Text>
-      {/* <TextInput
-        onChangeText={handleTest}
-        value={addressTo}
-        placeholder='搜尋公開地址(0x)' 
-        style={{width:"100%", backgroundColor: "#fff", padding: 10}}
-      /> */}
-      {
-        verify == "true" ?
-        <View>
-          <Text>{addressTo}</Text>
-          <Text onPress={()=>{setVerify("null")}}>我是叉叉</Text>
-        </View>
-        :
-        <TextInput
-          onChangeText={handleTest}
-          value={addressTo}
-          placeholder='搜尋公開地址(0x)' 
-          style={{width:"100%", backgroundColor: "#fff", padding: 10}}
-        />
-      }
       { 
         verify=="true" ? 
-        <View style={{flex:1, paddingVertical: 10}}>
-          <Text style={{color: '#36BF36'}}>偵測到新位址！</Text> 
-          <View style={{flex:1}}>
+        <View style={{ flex:1, paddingBottom: 10 }}>
+          <View style={sendTxStyles.addressBox}>
+            <Text style={{ flex:1, paddingRight: 10 }}>{address}</Text>
+            <Text onPress={()=>setVerify("null")}>X</Text>
+          </View>
+          <Text style={{ color: '#36BF36' }}>偵測到錢包位址！</Text> 
+          <View style={{ flex:1 }}>
             <View style={[sendTxStyles.box, { marginTop: 50 }]}>
               <Text style={sendTxStyles.subTitle}>資產：</Text>
-              <Text style={{ fontSize: 19 }}>{balance==0 ? 0 : balance} RinkebyETH</Text>
+              <Text style={{ fontSize: 19 }}>{balance==0 ? 0 : balance}  RinkebyETH</Text>
             </View>
             <View style={[sendTxStyles.box, { marginTop: 30, marginBottom: 10 }]}>
               <Text style={sendTxStyles.subTitle}>數量：</Text>
@@ -134,55 +118,63 @@ export default function Account({ address, mnemonic, balance }) {
                 onChangeText={handleAmount}
                 value={amount} 
                 placeholder='0' 
-                style={{ width:"10%", backgroundColor: "#fff", marginRight: 10}} 
+                style={sendTxStyles.amountText} 
               />
               <Text style={{ fontSize: 19 }}>RinkebyETH</Text>
             </View>
-            { amount >= balance && <Text style={{color: 'red', textAlign: 'right'}}>資金不足</Text>}
+            { amount >= balance && <Text style={{ color: 'red', textAlign:'right' }}>資金不足</Text>}
           </View>
           <View style={sendTxStyles.btnContainer}>
             <TouchableOpacity 
               style={sendTxStyles.btn} 
-              onPress={()=>{setPage('account')}}
+              onPress={()=> {
+                setVerify("null")
+                setPage('account')
+              }}
             >
-              <Text style={{color:'#007AFF', fontSize: 18}}>取消</Text>
+              <Text style={{ color:'#007AFF', fontSize: 18 }}>取消</Text>
             </TouchableOpacity>
             <TouchableOpacity 
-              style={[sendTxStyles.btn, {backgroundColor: '#007AFF'}]}
+              style={[sendTxStyles.btn, { backgroundColor: '#007AFF' }]}
               onPress={sendTransation}
             >
-              <Text style={{color:'#fff', fontSize: 18}}>確認</Text>
+              <Text style={{ color:'#fff', fontSize: 18 }}>確認</Text>
             </TouchableOpacity>
           </View>
         </View>
         :
-        <View style={{ paddingVertical: 10, flexDirection: 'row'}}>
-          <View style={{flex:1}}>
-            { verify=="false" && <Text style={{color: 'red'}}>接收位址錯誤</Text> }
+        <View>
+          <TextInput
+            onChangeText={handleTest}
+            value={addressTo}
+            placeholder='搜尋公開地址(0x)' 
+            style={[sendTxStyles.addressBox, { width: "100%" }]}
+          />
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ flex:1 }}>
+              { verify=="false" && <Text style={{ color: 'red' }}>接收位址錯誤</Text> }
+            </View>
+            <Text onPress={()=>setPage("account")} style={sendTxStyles.cancelBtn}>取消</Text>
           </View>
-          <Text onPress={()=>setPage("account")} style={{textAlign: 'right', color: '#007AFF', paddingVertical: 10, paddingLeft: 20}}>取消</Text>
         </View>
       }
     </View>
   )
 
   return (
-    <View style={styles.container}>
+    <View style={accStyles.container}>
       { page=="account" && renderAccount() }
       { page=="send" && renderSendTx() }
     </View>
   )
 }
 
-const styles = StyleSheet.create({
+const accStyles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: '#fff',
     paddingVertical: 15,
     paddingHorizontal: 10,
-  }
-})
-const accStyles = StyleSheet.create({
+  },
   titleContainer: { 
     alignItems: 'center' 
   },
@@ -240,13 +232,30 @@ const sendTxStyles = StyleSheet.create({
     textAlign: 'center', 
     paddingBottom: 14,
   },
+  addressBox: {
+    flexDirection:'row', 
+    alignItems:'center', 
+    backgroundColor: '#fff', 
+    paddingVertical: 5, 
+    paddingHorizontal: 8, 
+    marginBottom: 10,
+  },
   box: {
     flexDirection:'row', 
-    justifyContent: 'flex-end'
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   subTitle: { 
     fontWeight: '500', 
     fontSize: 20 
+  },
+  amountText: { 
+    textAlign:'center', 
+    fontSize: 17,
+    width:"45%", 
+    marginRight: 10, 
+    borderBottomWidth: 1, 
+    borderColor: "gray",
   },
   btnContainer: {
     flexDirection:'row', 
@@ -260,5 +269,11 @@ const sendTxStyles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 18,
     justifyContent: 'center',
-},
+  },
+  cancelBtn: {
+    textAlign: 'right', 
+    color: '#007AFF', 
+    paddingVertical: 10, 
+    paddingLeft: 20
+  },
 });
