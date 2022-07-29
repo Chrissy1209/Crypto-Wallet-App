@@ -25,7 +25,9 @@ export default function Home({ navigation, route }) {
     try {
       const provider = new ethers.providers.JsonRpcProvider("https://rinkeby.infura.io/v3/ab0bba1edd7c44b28fdf159193f938f2");
       const b = await provider.getBalance(addr) //fetch the balance
-      setBalance(ethers.utils.formatEther(b))   
+      const x = ethers.utils.formatEther(b)
+      if(x<1) setBalance(x.slice(0, 10))
+      else setBalance(x)
     } 
     catch(err)
     {
