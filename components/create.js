@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Button } from 'react-native';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import "react-native-get-random-values"
 import "@ethersproject/shims"
 import { ethers } from "ethers";
@@ -12,20 +12,26 @@ export const CreateScreen = ({ navigation }) => {
 
 //---------------
 
-  useEffect(()=>{
+  useEffect(() => {
+    const action = () => {
+      const wallet = ethers.Wallet.createRandom()
+      console.log(wallet)
+      console.log('address:', wallet.address)
+      setAddress(wallet.address)
+      console.log('mnemonic:', wallet.mnemonic.phrase)
+      setPhrase(wallet.mnemonic.phrase)
+      console.log('privateKey:', wallet.privateKey)
+    }
     action()
   }, [])
-  const action = () => {
-    const wallet = ethers.Wallet.createRandom()
-    console.log(wallet)
-    console.log('address:', wallet.address)
-    setAddress(wallet.address)
-    console.log('mnemonic:', wallet.mnemonic.phrase)
-    setPhrase(wallet.mnemonic.phrase)
-    console.log('privateKey:', wallet.privateKey)
-  }
 
-//---------------
+  const handleNext = useCallback(() => {
+    navigation.push('Create2', {phrase: phrase, address: address})
+  }, [phrase, address])
+  const handleDeclaration = useCallback(() => {
+    setDeclaration(true)
+  }, [])
+
 
   return (
     <View style={styles.container}>
@@ -33,7 +39,7 @@ export const CreateScreen = ({ navigation }) => {
         <Text style={styles.titleText}>Your Secret Recovery Phrase</Text>
       </View>
       <View style={styles.subContainer}>
-        <Text style={{ fontSize: 19 }}>註記詞將可協助您用更簡單的方式備份帳戶資訊。{"\n\n"}警告：絕對不要洩漏您的註記詞。{"\n"}任何人得知註記詞代表他可以竊取您所有的代幣。{"\n"}</Text>
+        <Text style={styles.fontSize}>註記詞將可協助您用更簡單的方式備份帳戶資訊。{"\n\n"}警告：絕對不要洩漏您的註記詞。{"\n"}任何人得知註記詞代表他可以竊取您所有的代幣。{"\n"}</Text>
         <View style={styles.phraseContainer}>
         {
           declaratoin ? 
@@ -45,15 +51,9 @@ export const CreateScreen = ({ navigation }) => {
         <View style={styles.btn}>
         {
           declaratoin ? 
-            <Button 
-              onPress={() => navigation.push('Create2', {phrase: phrase, address: address})} 
-              title="下一步" 
-            />
+            <Button onPress={handleNext} title="下一步" />
           :
-            <Button 
-              onPress={() => setDeclaration(true)} 
-              title="我明白了" 
-            />
+            <Button onPress={handleDeclaration} title="我明白了" />
         }
         </View>
       </View>
@@ -64,50 +64,61 @@ export const CreateScreen = ({ navigation }) => {
 export const CreateScreen2 = ({ navigation, route }) => {
   const phrase = route.params.phrase.split(" ")
   const [check, setCheck] = useState([])
-  const [warning, setWarning] = useState(false)
+  const [errMes, setErrMes] = useState(false)
+
+//---------------
+
+  const handleSubmit = useCallback(() => {
+    console.log("check = "+ check)
+    console.log("phrase = "+ phrase)
+    if(check.every((e, index) => e != phrase[index])) setErrMes(true) 
+    else {
+      console.log("navigation!!!")
+      // navigation.goBack() 
+      // navigation.goBack()
+      // navigation.navigate("Home", {addr: route.params.address, mnem: route.params.phrase})
+    }
+  }, [check])
+
 
   return (
-    <View style={[styles.container, { paddingHorizontal: 40 }]}>
-      <View style={{flex: 1, alignItems:'center',}}>
+    <View style={[styles.container, styles2.container]}>
+      <View style={styles2.title}>
         { 
-          warning ?
-          <Text style={[styles.titleText, { fontSize: 24, color: 'red' }]}>註記詞錯誤</Text> 
+          errMes ?
+            <Text style={[styles2.titleText, { color: 'red' }]}>註記詞錯誤</Text> 
           :
-          <Text style={[styles.titleText, { fontSize: 24 }]}>確認您已經備份的註記詞</Text>
+            <Text style={styles2.titleText}>確認您已經備份的註記詞</Text>
         }
       </View>
-      <View style={[styles.boxContainer, { flexWrap: 'wrap' }]}>
+      <View style={[styles2.boxContainer, styles2.checkBoxCtner]}>
         {
           check.map((e, index) => ( 
-            <View key={index} style={[styles.box, {
-                borderColor:'#2196F3', 
-                borderWidth: 1,
-                backgroundColor: "#EDEDED", 
-              }]}>
+            <View key={index} style={[styles2.phraseBox, styles2.checkBox]}>
               <Button title={e}
                 onPress={() => {
                   let one = check.slice(0, check.indexOf(e))
                   let two = check.slice(check.indexOf(e)+1, check.length)
                   setCheck(() => [...one, ...two])
-                  setWarning(false)
+                  setErrMes(false)
                 }}
               />
             </View>
           ))
         }
       </View>
-      <View style={styles.boxContainer}>
+      <View style={[styles2.boxContainer, styles2.phraseBoxCtner]}>
         {
           phrase.map((e, index) => {
             if(check.indexOf(e) != -1) {
               return ( 
-                <View key={index} style={styles.box}>
+                <View key={index} style={styles2.phraseBox}>
                   <Button disabled title={e} />
                 </View>  
               )
             } else {
               return ( 
-                <View key={index} style={styles.box}>
+                <View key={index} style={styles2.phraseBox}>
                   <Button title={e}
                     onPress={() => {
                       setCheck((pre) => [...pre, e])
@@ -121,20 +132,10 @@ export const CreateScreen2 = ({ navigation, route }) => {
       </View>
       <View style={styles.btn}>
         {
-          check.length == phrase.length
-          ?
-          <Button 
-            onPress={() => {
-              if(check.every((e, index) => e != phrase[index])) setWarning(true) 
-              else {
-                navigation.goBack() 
-                navigation.goBack()
-                navigation.navigate("Home", {addr: route.params.address, mnem: route.params.phrase})
-              }
-            }} 
-            title="完成"
-          /> 
-          : <Button disabled title="完成" /> 
+          check.length == phrase.length ? 
+            <Button onPress={handleSubmit} title="完成" />
+          :
+            <Button disabled title="完成" /> 
         }
       </View>
     </View>
@@ -155,6 +156,9 @@ const styles = StyleSheet.create({
   titleText: { 
     fontWeight: "500", 
     fontSize: 32 
+  },
+  fontSize: { 
+    fontSize: 19 
   },
   subContainer: { 
     flex: 4, 
@@ -179,23 +183,46 @@ const styles = StyleSheet.create({
     padding: 20, 
     fontSize: 20 
   },
-  boxContainer: { 
+  btn: { 
+    flex: 1, 
+    paddingVertical: 14 
+  },
+})
+const styles2 = StyleSheet.create({
+  container: {
+    paddingHorizontal: 40,
+  },
+  title: {
+    flex: 1, 
+    alignItems:'center'
+  },
+  titleText: { 
+    fontWeight: "500", 
+    fontSize: 24
+  },
+  boxContainer: {
     flex: 5,
     flexDirection: 'row',
-    flexWrap: 'wrap-reverse', 
     alignItems: 'center',
     justifyContent: 'center', 
     marginTop: 10,
     marginHorizontal: -30,
   },
-  box: { 
+  checkBoxCtner: {
+    flexWrap: 'wrap',
+  },
+  checkBox: {
+    backgroundColor: "#EDEDED",
+    borderColor:'#2196F3', 
+    borderWidth: 1,
+  },
+  phraseBoxCtner: { 
+    flexWrap: 'wrap-reverse', 
+  },
+  phraseBox: { 
     backgroundColor: "#fff", 
     borderRadius: 8,
     width: "30%", 
     margin: 4,
-  },
-  btn: { 
-    flex: 1, 
-    paddingVertical: 14 
   },
 })
