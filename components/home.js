@@ -1,11 +1,12 @@
+import React from 'react';
 import { StyleSheet, View, Button, Text } from 'react-native';
-import { useState, useEffect, useCallback, memo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import "react-native-get-random-values"
 import "@ethersproject/shims"
 import { ethers } from "ethers";
 import MyAccount from "./account"
 
-const Register = memo(({ navigation }) => {
+const Register = React.memo(({ navigation }) => {
   const handleNext = useCallback(()=> {
     navigation.navigate("Register")
   }, [navigation])

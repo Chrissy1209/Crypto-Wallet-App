@@ -1,10 +1,11 @@
+import React from 'react';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import { MaterialIcons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import { useState, useCallback, memo } from 'react';
+import { useState, useCallback } from 'react';
 import * as Clipboard from 'expo-clipboard';
 import MyTransaction from './sendTx'
 
-const RenderAccount = memo(({ address, balance, setPage }) => {
+const RenderAccount = React.memo(({ address, balance, setPage }) => {
   var one = address.substring(0, 5)
   var two = address.substring(38, 42)
   console.log("RenderAccount")
