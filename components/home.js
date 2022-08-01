@@ -25,31 +25,31 @@ export default function Home({ navigation, route }) {
   const [mnemonic, setMnemonic] = useState('')
   const [sendTx, setSendTx] = useState(false)
 
+//---------------
+
   useEffect(()=>{
     if(route.params == undefined) setPage("register")
     else {
       setAddress(route.params.addr)
       setMnemonic(route.params.mnem)
       setPage('account')
-      getBalance(route.params.addr)
+
+      const getBalance = async () => {
+        try {
+          const provider = new ethers.providers.JsonRpcProvider("https://rinkeby.infura.io/v3/ab0bba1edd7c44b28fdf159193f938f2");
+          const b = await provider.getBalance(route.params.addr) //fetch the balance
+          const x = ethers.utils.formatEther(b)
+          if(x<1) setBalance(x.slice(0, 9))
+          else setBalance(x)
+          console.log('done')
+        } 
+        catch(err) {
+          console.log(err)
+        }
+      }
+      getBalance()
     } 
   }, [route, sendTx])
-  
-  const getBalance = useCallback((addr) => {
-    const getingBalance = async () => {
-      try {
-        const provider = new ethers.providers.JsonRpcProvider("https://rinkeby.infura.io/v3/ab0bba1edd7c44b28fdf159193f938f2");
-        const b = await provider.getBalance(addr) //fetch the balance
-        const x = ethers.utils.formatEther(b)
-        if(x<1) setBalance(x.slice(0, 9))
-        else setBalance(x)
-      } 
-      catch(err) {
-        console.log(err)
-      }
-    }
-    getingBalance()
-  }, [])
 
   return (
     <View style={styles.container}>
