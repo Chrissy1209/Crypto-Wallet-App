@@ -1,5 +1,5 @@
-import { View, StyleSheet, TextInput, Text, Button, Alert } from "react-native";
-import { useState, useEffect } from 'react';
+import { View, StyleSheet, TextInput, Text, Button } from "react-native";
+import { useState, useCallback } from 'react';
 import "react-native-get-random-values"
 import "@ethersproject/shims"
 import { ethers } from "ethers";
@@ -10,13 +10,12 @@ export default function Import({ navigation }) {
 
 //---------------
 
-  function HandleTextChange(e) {
+  const handleTextChange = useCallback((e) => {
     setErrMes(false)
     setPhrase(e)
-    console.log(e);
-  }
+  }, [])
 
-  const HandleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     try {
       let mnemonic = "insect clutch budget nominee consider cradle chef slam soap spoil man rotate"
       let mnemonicWallet = ethers.Wallet.fromMnemonic(mnemonic);
@@ -27,37 +26,36 @@ export default function Import({ navigation }) {
     catch(err) {
       setErrMes(true)
     }
-  }
+  }, [phrase])
 
   return (
     <View style={styles.container}>
       <View style={styles.title}>
         <Text style={styles.titleText}>Your Secret Recovery Phrase</Text>
       </View>
-      <View style={{ flex: 4, paddingTop: 28 }}>
-        <Text style={{ fontSize: 19 }}>助記詞一般由 12、15、18、21 個{"\n"}英文單詞構成。{"\n\n"}輸入您的註記詞以恢復錢包。{"\n"}</Text>
-        <View style={{ flex:4, justifyContent: "center", alignItems: 'center'}}>
+      <View style={styles.subContainer}>
+        <Text style={styles.fontSize}>助記詞一般由 12、15、18、21 個{"\n"}英文單詞構成。{"\n\n"}輸入您的註記詞以恢復錢包。{"\n"}</Text>
+        <View style={styles.phraseContainer}>
           <TextInput
             multiline
-            style={styles.phraseText}
-            onChangeText={HandleTextChange}
-            value={phrase}//number
-            //keyboardType="numeric"
+            style={styles.phraseBox}
+            onChangeText={handleTextChange}
+            value={phrase}
             // placeholder="insect clutch budget nominee consider cradle chef slam soap spoil man rotate"
           />
           {
             errMes ?
-              <Text style={{ color: 'red', fontSize: 15, marginTop: 10}}>Invalid Secret Recovery Phrase</Text>
+              <Text style={styles.errMes}>Invalid Secret Recovery Phrase</Text>
             :
-              <Text style={{ color: "#EDEDED", fontSize: 15, marginTop: 10}}>Invalid Secret Recovery Phrase</Text>
+              <View style={styles.emptyBox} />
           }
         </View>
-        <View style={{ flex:1, paddingVertical: 14 }}>
+        <View style={styles.btnContainer}>
           {
             phrase == "" ? 
-              <Button title='提交' onPress={HandleSubmit} disabled/> 
+              <Button title='提交' disabled/> 
             : 
-              <Button title='提交' onPress={HandleSubmit}/>
+              <Button title='提交' onPress={handleSubmit}/>
           }
         </View>
       </View>
@@ -79,7 +77,19 @@ const styles = StyleSheet.create({
     fontWeight: "500", 
     fontSize: 32 
   },
-  phraseText: { 
+  subContainer: { 
+    flex: 4, 
+    paddingTop: 28, 
+  }, 
+  fontSize: { 
+    fontSize: 19, 
+  },
+  phraseContainer: { 
+    flex:4, 
+    justifyContent: "center", 
+    alignItems: 'center', 
+  }, 
+  phraseBox: { 
     height: 150,
     width: "100%",
     marginTop: 10,
@@ -91,4 +101,16 @@ const styles = StyleSheet.create({
     borderRadius:10,
     borderWidth: 1,
   },
+  errMes: { 
+    color: 'red', 
+  fontSize: 15, 
+  marginTop: 10, 
+  }, 
+  emptyBox: { 
+    marginTop: 28 
+  }, 
+  btnContainer: { 
+    flex:1, 
+    paddingVertical: 14,
+  }, 
 });
