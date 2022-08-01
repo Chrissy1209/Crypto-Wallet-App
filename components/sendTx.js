@@ -8,19 +8,21 @@ import { ethers } from "ethers";
 export default function sendTransaction ({ address, mnemonic, balance, setPage, setSendTx }) {
   const [addressTo, setAddressTo] = useState('')
   const [amount, setAmount] = useState('')
-  const [verifyAddr, setVerifyAddr] = useState("null")
+  const [verifyMes, setVerifyMes] = useState("null")
   const [transaction, setTransaction] = useState(false)
 
-  const handleTest = useCallback((e) => {
+//---------------
+
+  const handleAddrChange = useCallback((e) => {
     setAddressTo(e)
-    if(e=='') setVerifyAddr("null")
+    if(e=='') setVerifyMes("null")
     else {
       try {
-        ethers.utils.getAddress(e);
-        setVerifyAddr("true")
+        // ethers.utils.getAddress(e);
+        setVerifyMes("true")
       } 
       catch(err) { 
-        setVerifyAddr("false") 
+        setVerifyMes("false") 
       }
     } 
   }, [])
@@ -35,8 +37,8 @@ export default function sendTransaction ({ address, mnemonic, balance, setPage, 
   const handlePage = useCallback(() => {
     setPage("account")
   }, [])
-  const handleVerify = useCallback(() => {
-    setVerifyAddr("null")
+  const handleVerifyMes = useCallback(() => {
+    setVerifyMes("null")
     setAddressTo('')
   }, [])
   const handleSendTx = useCallback(() => {
@@ -70,12 +72,12 @@ export default function sendTransaction ({ address, mnemonic, balance, setPage, 
     <View style={styles.flex}>
       <Text style={styles.titleText}>Send to</Text>
       { 
-        verifyAddr=="true" ? 
+        verifyMes=="true" ? 
         <View style={styles.flex}>
           <View style={styles.addressBox}>
             <Text style={styles.addressText}>{address}</Text>
-            {/* <Text style={styles.address}>{addressTo}</Text> */}
-            <Text onPress={handleVerify}>X</Text>
+            {/* <Text style={styles.addressText}>{addressTo}</Text> */}
+            <Text onPress={handleVerifyMes}>X</Text>
           </View>
           <Text style={styles.textGreen}>偵測到錢包位址！</Text> 
           {/* ---------------- */}
@@ -118,14 +120,14 @@ export default function sendTransaction ({ address, mnemonic, balance, setPage, 
         :
         <View>
           <TextInput
-            onChangeText={handleTest}
+            onChangeText={handleAddrChange}
             value={addressTo}
             placeholder='搜尋公開地址(0x)' 
             style={styles.addressInputBox}
           />
           <View style={styles.flexDirection}>
             <View style={styles.flex}>
-              { verifyAddr=="false" && <Text style={styles.textRed}>接收位址錯誤</Text> }
+              { verifyMes=="false" && <Text style={styles.textRed}>接收位址錯誤</Text> }
             </View>
             <Text onPress={handlePage} style={styles.cancelBtn}>取消</Text>
           </View>
