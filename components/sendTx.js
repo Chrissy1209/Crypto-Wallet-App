@@ -1,17 +1,17 @@
 import { StyleSheet, View, TouchableOpacity, Text, TextInput } from 'react-native';
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import "react-native-get-random-values"
 import "@ethersproject/shims"
 import { ethers } from "ethers";
 
 
-export default function renderSendTx ({ address, mnemonic, balance, setPage, setSendTx }) {
+export default function sendTransaction ({ address, mnemonic, balance, setPage, setSendTx }) {
   const [addressTo, setAddressTo] = useState('')
   const [amount, setAmount] = useState('')
   const [verifyAddr, setVerifyAddr] = useState("null")
   const [transaction, setTransaction] = useState(false)
 
-  const handleTest = (e) => {
+  const handleTest = useCallback((e) => {
     setAddressTo(e)
     if(e=='') setVerifyAddr("null")
     else {
@@ -23,37 +23,48 @@ export default function renderSendTx ({ address, mnemonic, balance, setPage, set
         setVerifyAddr("false") 
       }
     } 
-  }
-  const handleAmount = (e) => {
+  }, [])
+  const handleAmount = useCallback((e) => {
     if (e === '' || /^\d*\.?\d*$/.test(e)) {
       if(e[0]=="." && e.length>1) setAmount("0"+e) // .1 = 0.1
       else if (e.length==2 && e=='00') setAmount('0') //00000 -> 0
       else if (e.length==2 && e[0]=='0' && e[1]!='0' && e[1]!='.') setAmount(e.slice(1,2)) //0123 -> 123     
       else setAmount(e)
     }
-  }
-  const sendTransaction = async () => {
-    setTransaction(true)
+  }, [])
+  const handlePage = useCallback(() => {
+    setPage("account")
+  }, [])
+  const handleVerify = useCallback(() => {
+    setVerifyAddr("null")
+    setAddressTo('')
+  }, [])
+  const handleSendTx = useCallback(() => {
+    const sendTx = async () => {
+      setTransaction(true)
+      if(amount==""||amount=="."||amount=="0.") setAmount("0")
 
-    if(amount==""||amount=="."||amount=="0.") setAmount("0")
-
-    let mnemonicWallet = ethers.Wallet.fromMnemonic(mnemonic)
-    const provider = new ethers.providers.JsonRpcProvider("https://rinkeby.infura.io/v3/ab0bba1edd7c44b28fdf159193f938f2");
-    const wallet = new ethers.Wallet(mnemonicWallet.privateKey, provider)
-    
-    try {
-      const tx = await wallet.sendTransaction({
-        to: "0x4F040609a8Fc36724CA9e17EC5D05eEB390087ad",
-        value: ethers.utils.parseEther(amount)
-      })
-      await tx.wait()
-      setSendTx(true)
-      setTransaction(false)
-      setPage('account')
-      console.log(tx)  
-    } 
-    catch(err) { console.log(err) }
-  }
+      let mnemonicWallet = ethers.Wallet.fromMnemonic(mnemonic)
+      const provider = new ethers.providers.JsonRpcProvider("https://rinkeby.infura.io/v3/ab0bba1edd7c44b28fdf159193f938f2");
+      const wallet = new ethers.Wallet(mnemonicWallet.privateKey, provider)
+      
+      try {
+        const tx = await wallet.sendTransaction({
+          to: "0x4F040609a8Fc36724CA9e17EC5D05eEB390087ad",
+          value: ethers.utils.parseEther(amount)
+        })
+        await tx.wait()
+        setSendTx(true)
+        setTransaction(false)
+        setPage('account')
+        console.log(tx)  
+      } 
+      catch (err) { 
+        console.log(err) 
+      }
+    }
+    sendTx()
+  }, [amount])
 
   return (
     <View style={styles.flex}>
@@ -62,11 +73,11 @@ export default function renderSendTx ({ address, mnemonic, balance, setPage, set
         verifyAddr=="true" ? 
         <View style={styles.flex}>
           <View style={styles.addressBox}>
-            <Text style={styles.address}>{address}</Text>
+            <Text style={styles.addressText}>{address}</Text>
             {/* <Text style={styles.address}>{addressTo}</Text> */}
-            <Text onPress={()=>setVerifyAddr("null")}>X</Text>
+            <Text onPress={handleVerify}>X</Text>
           </View>
-          <Text style={styles.greenColor}>偵測到錢包位址！</Text> 
+          <Text style={styles.textGreen}>偵測到錢包位址！</Text> 
           {/* ---------------- */}
           <View style={styles.flex}>
             <View style={[styles.box, { marginTop: 45 }]}>
@@ -84,30 +95,22 @@ export default function renderSendTx ({ address, mnemonic, balance, setPage, set
               />
               <Text style={styles.fontSize}>RinkebyETH</Text>
             </View>
-            { amount >= balance && <Text style={styles.redColor}>資金不足</Text>}
+            { amount >= balance && <Text style={[styles.textRed, { textAlign: 'right' }]}>資金不足</Text>}
           </View>
-          {
-            transaction &&
-            <Text style={styles.processText}>交易處理中 . . .</Text>
-          }
+          { transaction && <Text style={styles.processText}>交易處理中 . . .</Text> }
           {/* ---------------- */}
           <View style={styles.btnContainer}>
-            <TouchableOpacity 
-              style={styles.btn} 
-              onPress={()=> {
-                setVerifyAddr("null")
-                setPage('account')
-              }}
+            <TouchableOpacity onPress={handlePage} 
+              style={styles.btn}
             >
-              <Text style={[styles.fontSize, { color: '#007AFF' }]}>取消</Text>
+              <Text style={[styles.fontSize, styles.textBlue]}>取消</Text>
             </TouchableOpacity>
             {
               amount >= balance || transaction ? null :
-              <TouchableOpacity 
+              <TouchableOpacity onPress={handleSendTx}
                 style={[styles.btn, { backgroundColor: '#007AFF' }]}
-                onPress={sendTransaction}
               >
-                <Text style={[styles.fontSize, { color:'#fff' }]}>確認</Text>
+                <Text style={[styles.fontSize, styles.textWhite]}>確認</Text>
               </TouchableOpacity>
             }
           </View>
@@ -120,11 +123,11 @@ export default function renderSendTx ({ address, mnemonic, balance, setPage, set
             placeholder='搜尋公開地址(0x)' 
             style={styles.addressInputBox}
           />
-          <View style={{ flexDirection: 'row' }}>
+          <View style={styles.flexDirection}>
             <View style={styles.flex}>
-              { verifyAddr=="false" && <Text style={{ color: 'red' }}>接收位址錯誤</Text> }
+              { verifyAddr=="false" && <Text style={styles.textRed}>接收位址錯誤</Text> }
             </View>
-            <Text onPress={()=>setPage("account")} style={styles.cancelBtn}>取消</Text>
+            <Text onPress={handlePage} style={styles.cancelBtn}>取消</Text>
           </View>
         </View>
       }
@@ -136,8 +139,23 @@ const styles = StyleSheet.create({
   flex: {
     flex: 1
   },
+  flexDirection: { 
+    flexDirection: 'row' 
+  },
   fontSize: { 
     fontSize: 19 
+  },
+  textRed: { 
+    color: 'red' 
+  },
+  textGreen: { 
+    color: '#36BF36',
+  },
+  textBlue: { 
+    color: '#007AFF' 
+  },
+  textWhite: { 
+    color:'#fff' 
   },
   titleText: {
     fontSize: 23, 
@@ -155,17 +173,10 @@ const styles = StyleSheet.create({
     borderWidth:1, 
     borderRadius:8
   },
-  address: { 
+  addressText: { 
     flex:1, 
     paddingRight: 10, 
     color: '#4D80E6' ,
-  },
-  greenColor: { 
-    color: '#36BF36',
-  },
-  redColor: { 
-    color: 'red', 
-    textAlign:'right' ,
   },
   processText: {
     flex:1,  
