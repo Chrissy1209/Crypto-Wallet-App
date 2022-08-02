@@ -1,5 +1,6 @@
 // import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, Button } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -8,13 +9,8 @@ import { CreateScreen, CreateScreen2 } from './components/create'
 import ImportScreen from "./components/import"
 import HomeScreen from "./components/home"
 
-const renderIcon = () => (
-  <View style={{paddingLeft: 10}}>
-    <MaterialIcons name="close" size={24} color="#007AFF" />
-  </View>
-)
 
-function RegisterScreen({ navigation }) {
+const RegisterScreen = React.memo(({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.title}>
@@ -40,7 +36,12 @@ function RegisterScreen({ navigation }) {
       </View>
     </View>
   );
-}
+})
+const renderIcon = () => (
+  <View style={{paddingLeft: 10}}>
+    <MaterialIcons name="close" size={24} color="#007AFF" />
+  </View>
+)
 
 //-------------
 
@@ -49,23 +50,23 @@ const CreateStack = createStackNavigator();
 const Register = createStackNavigator();
 const ImportStack = createStackNavigator();
 
-const RegisterStackScreen = () => (
+const RegisterStackScreen = React.memo(() => (
   <Register.Navigator screenOptions={{ title: " " }}>
     <Register.Screen name='RegisterScreen' component={RegisterScreen} options={{ headerTransparent: false, headerBackTitle: " ", headerBackImage:()=>renderIcon() }}/> 
   </Register.Navigator>
-)
-const CreateStackScreen = () => (
+))
+const CreateStackScreen = React.memo(() => (
   <CreateStack.Navigator screenOptions={{ title: "創建錢包" }}>
     {/* headerShown: false, ...createStackNavigator.ModalPresentationIOS */}
     <CreateStack.Screen name='Create1' component={CreateScreen} options={{ headerBackTitle: " ", headerBackImage:()=>renderIcon() }}/>
     <CreateStack.Screen name="Create2" component={CreateScreen2} options={{ headerBackTitle: "" }}/>
   </CreateStack.Navigator>
-)
-const ImportStackScreen = () => (
+))
+const ImportStackScreen = React.memo(() => (
   <ImportStack.Navigator screenOptions={{ title: "匯入錢包" }}>
     <ImportStack.Screen name='ImportScreen' component={ImportScreen} options={{ headerBackTitle: " ",  headerBackImage:()=>renderIcon()}}/>
   </ImportStack.Navigator>
-)
+))
 
 export default function App() {
   return (
