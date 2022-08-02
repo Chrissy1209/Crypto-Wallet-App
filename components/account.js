@@ -1,7 +1,6 @@
-import React from 'react';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import { MaterialIcons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import * as Clipboard from 'expo-clipboard';
 import MyTransaction from './sendTx'
 
@@ -63,11 +62,11 @@ const RenderAccount = React.memo(({ address, balance, setPage }) => {
 
 export default function Account({ address, mnemonic, balance, setSendTx }) {
   const [page, setPage] = useState('account')
-  console.log("Account")
+  console.log('Account')
   return (
     <View style={styles.container}>
-      { page=="account" && <RenderAccount address={address} balance={balance} setPage={setPage} /> }
-      { page=="send" && <MyTransaction address={address} balance={balance} mnemonic={mnemonic} setPage={setPage} setSendTx={setSendTx} /> }
+      { page === 'account' && <RenderAccount address={address} balance={balance} setPage={setPage} /> }
+      { page === 'send' && <MyTransaction address={address} balance={balance} mnemonic={mnemonic} setPage={setPage} setSendTx={setSendTx} /> }
     </View>
   )
 }
@@ -78,53 +77,53 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 10,
   },
-  titleContainer: { 
-    alignItems: 'center' 
+  titleContainer: {
+    alignItems: 'center',
   },
-  titleText: { 
-    fontSize: 28 
+  titleText: {
+    fontSize: 28,
   },
-  addressBox: { 
-    flexDirection: "row", 
-    paddingBottom: 20, 
-    paddingTop: 10 
+  addressBox: {
+    flexDirection: 'row',
+    paddingBottom: 20,
+    paddingTop: 10,
   },
-  address: { 
-    color: 'dimgray', 
-    fontSize: 16, 
-    marginRight: 3 
+  address: {
+    color: 'dimgray',
+    fontSize: 16,
+    marginRight: 3,
   },
-  subContainer: { 
-    borderTopWidth: 1, 
-    borderColor: 'gray', 
+  subContainer: {
+    borderTopWidth: 1,
+    borderColor: 'gray',
     paddingTop: 25,
   },
   etherIcon: {
-    alignItems:'center',
+    alignItems: 'center',
     paddingBottom: 11,
   },
-  balanceText: { 
-    textAlign:'center', 
-    fontSize: 28, 
-    fontWeight: "500" 
+  balanceText: {
+    textAlign: 'center',
+    fontSize: 28,
+    fontWeight: "500",
   },
-  iconContainer: { 
-    flexDirection: 'row', 
-    justifyContent: 'space-evenly', 
+  iconContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
     paddingTop: 35,
   },
-  iconBox: { 
-    width: 48,  
+  iconBox: {
+    width: 48,
   },
   icon: {
-    alignItems: 'center', 
+    alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: "#007AFF", 
-    borderRadius: 50, 
-    height: 48, 
+    backgroundColor: '#007AFF',
+    borderRadius: 50,
+    height: 48,
   },
   iconText: {
-    color: '#007AFF', //2196F3
+    color: '#007AFF', // 2196F3
     textAlign: 'center',
     fontWeight: '500',
     fontSize: 17,
