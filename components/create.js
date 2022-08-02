@@ -37,14 +37,7 @@ export function CreateScreen({ navigation }) {
         <Text style={styles.titleText}>Your Secret Recovery Phrase</Text>
       </View>
       <View style={styles.subContainer}>
-        <Text style={styles.fontSize}>
-          註記詞將可協助您用更簡單的方式備份帳戶資訊。
-          {'\n\n'}
-          警告：絕對不要洩漏您的註記詞。
-          {'\n'}
-          任何人得知註記詞代表他可以竊取您所有的代幣。
-          {'\n'}
-        </Text>
+        <Text style={styles.fontSize}>註記詞將可協助您用更簡單的方式備份帳戶資訊。{'\n\n'}警告：絕對不要洩漏您的註記詞。{'\n'}任何人得知註記詞代表他可以竊取您所有的代幣。{'\n'}</Text>
         <View style={styles.phraseContainer}>
           {
             declaratoin ? <Text style={styles.phraseText}>{phrase}</Text>
@@ -121,19 +114,20 @@ export function CreateScreen2({ navigation, route }) {
       <View style={styles.btn}>
         {
           check.length === phrase.length
-            ?
-            <Button
-              onPress={() => {
-                if(check.every((e, index) => e != phrase[index])) setErrMes(true) 
-                else {
-                  navigation.goBack()
-                  navigation.goBack()
-                  navigation.navigate('Home', {addr: route.params.address, mnem: route.params.phrase})
-                }
-              }}
-              title="完成" 
-            />
-          : <Button disabled title="完成" />
+            ? (
+              <Button
+                onPress={() => {
+                  if (check.every((e, index) => e !== phrase[index])) setErrMes(true)
+                  else {
+                    navigation.goBack()
+                    navigation.goBack()
+                    navigation.navigate('Home', { addr: route.params.address, mnem: route.params.phrase })
+                  }
+                }}
+                title="完成"
+              />
+            )
+            : <Button disabled title="完成" />
         }
       </View>
     </View>

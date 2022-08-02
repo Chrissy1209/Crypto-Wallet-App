@@ -5,16 +5,16 @@ import * as Clipboard from 'expo-clipboard';
 import MyTransaction from './sendTx'
 
 const RenderAccount = React.memo(({ address, balance, setPage }) => {
-  var one = address.substring(0, 5)
-  var two = address.substring(38, 42)
-  console.log("RenderAccount")
-  
+  const one = address.substring(0, 5)
+  const two = address.substring(38, 42)
+  console.log('RenderAccount')
+
   const handleCopy = useCallback(() => {
     Clipboard.setString(address);
-  }, [])
+  }, [address])
   const handlePage = useCallback(() => {
-    setPage("send")
-  }, [])
+    setPage('send')
+  }, [setPage])
 
   return (
     <View>
@@ -32,7 +32,7 @@ const RenderAccount = React.memo(({ address, balance, setPage }) => {
         <View style={styles.etherIcon}>
           <MaterialCommunityIcons name="ethereum" size={44} color="black" />
         </View>
-        <Text style={styles.balanceText}>{balance==0 ? 0 : balance} RinkebyETH</Text>
+        <Text style={styles.balanceText}>{balance == 0 ? 0 : balance} RinkebyETH</Text>
         {/* ---------------- */}
         <View style={styles.iconContainer}>
           <View style={styles.iconBox}>
@@ -56,7 +56,7 @@ const RenderAccount = React.memo(({ address, balance, setPage }) => {
         </View>
         {/* ---------------- */}
       </View>
-    </View> 
+    </View>
   )
 })
 
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   balanceText: {
     textAlign: 'center',
     fontSize: 28,
-    fontWeight: "500",
+    fontWeight: '500',
   },
   iconContainer: {
     flexDirection: 'row',

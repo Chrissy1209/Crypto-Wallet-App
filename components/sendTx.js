@@ -4,7 +4,7 @@ import 'react-native-get-random-values'
 import '@ethersproject/shims'
 import { ethers } from 'ethers';
 
-export default function sendTransaction({ address, mnemonic, balance, setPage, setSendTx }) {
+export default function SendTransaction({ address, mnemonic, balance, setPage, setSendTx }) {
   const [addressTo, setAddressTo] = useState('')
   const [amount, setAmount] = useState('')
   const [verifyMes, setVerifyMes] = useState('null')
@@ -26,7 +26,7 @@ export default function sendTransaction({ address, mnemonic, balance, setPage, s
   }, [])
   const handleAmount = useCallback((e) => {
     if (e === '' || /^\d*\.?\d*$/.test(e)) {
-      if (e[0] === '.' && e.length > 1) setAmount('0'+e) // .1 = 0.1
+      if (e[0] === '.' && e.length > 1) setAmount('0' + e) // .1 = 0.1
       else if (e.length === 2 && e === '00') setAmount('0') // 00000 -> 0
       else if (e.length === 2 && e[0] === '0' && e[1] !== '0' && e[1] !== '.') setAmount(e.slice(1, 2)) // 0123 -> 123
       else setAmount(e)
@@ -34,7 +34,7 @@ export default function sendTransaction({ address, mnemonic, balance, setPage, s
   }, [])
   const handlePage = useCallback(() => {
     setPage('account')
-  }, [])
+  }, [setPage])
   const handleVerifyMes = useCallback(() => {
     setVerifyMes('null')
     setAddressTo('')
@@ -68,67 +68,73 @@ export default function sendTransaction({ address, mnemonic, balance, setPage, s
   return (
     <View style={styles.flex}>
       <Text style={styles.titleText}>Send to</Text>
-      { 
-        verifyMes=='true' ? 
-        <View style={styles.flex}>
-          <View style={styles.addressBox}>
-            <Text style={styles.addressText}>{address}</Text>
-            {/* <Text style={styles.addressText}>{addressTo}</Text> */}
-            <Text onPress={handleVerifyMes}>X</Text>
-          </View>
-          <Text style={styles.textGreen}>偵測到錢包位址！</Text> 
-          {/* ---------------- */}
+      {
+        verifyMes === 'true' ? (
           <View style={styles.flex}>
-            <View style={[styles.box, { marginTop: 45 }]}>
-              <Text style={styles.subTitle}>資產：</Text>
-              <Text style={styles.fontSize}>{balance==0 ? 0 : balance}  RinkebyETH</Text>
+            <View style={styles.addressBox}>
+              <Text style={styles.addressText}>{address}</Text>
+              {/* <Text style={styles.addressText}>{addressTo}</Text> */}
+              <Text onPress={handleVerifyMes}>X</Text>
             </View>
-            <View style={[styles.box, { marginTop: 30, marginBottom: 10 }]}>
-              <Text style={styles.subTitle}>數量：</Text>
-              <TextInput 
-                keyboardType='numeric' 
-                onChangeText={handleAmount}
-                value={amount} 
-                placeholder='0' 
-                style={styles.amountText} 
-              />
-              <Text style={styles.fontSize}>RinkebyETH</Text>
-            </View>
-            { amount >= balance && <Text style={[styles.textRed, { textAlign: 'right' }]}>資金不足</Text>}
-          </View>
-          { transaction && <Text style={styles.processText}>交易處理中 . . .</Text> }
-          {/* ---------------- */}
-          <View style={styles.btnContainer}>
-            <TouchableOpacity onPress={handlePage} 
-              style={styles.btn}
-            >
-              <Text style={[styles.fontSize, styles.textBlue]}>取消</Text>
-            </TouchableOpacity>
-            {
-              amount >= balance || transaction ? null :
-              <TouchableOpacity onPress={handleSendTx}
-                style={[styles.btn, { backgroundColor: '#007AFF' }]}
-              >
-                <Text style={[styles.fontSize, styles.textWhite]}>確認</Text>
-              </TouchableOpacity>
-            }
-          </View>
-        </View>
-        :
-        <View>
-          <TextInput
-            onChangeText={handleAddrChange}
-            value={addressTo}
-            placeholder='搜尋公開地址(0x)' 
-            style={styles.addressInputBox}
-          />
-          <View style={styles.flexDirection}>
+            <Text style={styles.textGreen}>偵測到錢包位址！</Text>
+            {/* ---------------- */}
             <View style={styles.flex}>
-              { verifyMes=='false' && <Text style={styles.textRed}>接收位址錯誤</Text> }
+              <View style={[styles.box, { marginTop: 45 }]}>
+                <Text style={styles.subTitle}>資產：</Text>
+                <Text style={styles.fontSize}>{balance == 0 ? 0 : balance}  RinkebyETH</Text>
+              </View>
+              <View style={[styles.box, { marginTop: 30, marginBottom: 10 }]}>
+                <Text style={styles.subTitle}>數量：</Text>
+                <TextInput
+                  keyboardType="numeric"
+                  onChangeText={handleAmount}
+                  value={amount}
+                  placeholder="0"
+                  style={styles.amountText}
+                />
+                <Text style={styles.fontSize}>RinkebyETH</Text>
+              </View>
+              { amount >= balance && <Text style={[styles.textRed, { textAlign: 'right' }]}>資金不足</Text>}
             </View>
-            <Text onPress={handlePage} style={styles.cancelBtn}>取消</Text>
+            { transaction && <Text style={styles.processText}>交易處理中 . . .</Text> }
+            {/* ---------------- */}
+            <View style={styles.btnContainer}>
+              <TouchableOpacity
+                onPress={handlePage}
+                style={styles.btn}
+              >
+                <Text style={[styles.fontSize, styles.textBlue]}>取消</Text>
+              </TouchableOpacity>
+              {
+                amount >= balance || transaction ? null
+                  : (
+                    <TouchableOpacity
+                      onPress={handleSendTx}
+                      style={[styles.btn, { backgroundColor: '#007AFF' }]}
+                    >
+                      <Text style={[styles.fontSize, styles.textWhite]}>確認</Text>
+                    </TouchableOpacity>
+                  )
+              }
+            </View>
           </View>
-        </View>
+        )
+          : (
+            <View>
+              <TextInput
+                onChangeText={handleAddrChange}
+                value={addressTo}
+                placeholder="搜尋公開地址(0x)"
+                style={styles.addressInputBox}
+              />
+              <View style={styles.flexDirection}>
+                <View style={styles.flex}>
+                  { verifyMes === 'false' && <Text style={styles.textRed}>接收位址錯誤</Text> }
+                </View>
+                <Text onPress={handlePage} style={styles.cancelBtn}>取消</Text>
+              </View>
+            </View>
+          )
       }
     </View>
   )

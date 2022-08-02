@@ -14,7 +14,7 @@ const Register = React.memo(({ navigation }) => {
   return (
     <View style={styles.subCoiner}>
       <Text style={styles.fontSize}>歡迎來到 Chrissy Wallet.</Text>
-      <Button title='開始使用' onPress={handleNext}></Button>
+      <Button title="開始使用" onPress={handleNext} />
     </View>
   )
 })

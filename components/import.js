@@ -17,8 +17,8 @@ export default function Import({ navigation }) {
 
   const handleSubmit = useCallback(() => {
     try {
-      let mnemonic = 'insect clutch budget nominee consider cradle chef slam soap spoil man rotate'
-      let mnemonicWallet = ethers.Wallet.fromMnemonic(mnemonic);
+      const mnemonic = 'insect clutch budget nominee consider cradle chef slam soap spoil man rotate'
+      const mnemonicWallet = ethers.Wallet.fromMnemonic(mnemonic);
 
       navigation.goBack()
       navigation.navigate('Home', { addr: mnemonicWallet.address, mnem: mnemonic })
@@ -40,21 +40,16 @@ export default function Import({ navigation }) {
             style={styles.phraseBox}
             onChangeText={handleTextChange}
             value={phrase}
-            // placeholder='insect clutch budget nominee consider cradle chef slam soap spoil man rotate'
           />
           {
-            errMes ?
-              <Text style={styles.errMes}>Invalid Secret Recovery Phrase</Text>
-            :
-              <View style={styles.emptyBox} />
+            errMes ? <Text style={styles.errMes}>Invalid Secret Recovery Phrase</Text>
+              : <View style={styles.emptyBox} />
           }
         </View>
         <View style={styles.btnContainer}>
           {
-            phrase == '' ? 
-              <Button title='提交' disabled/> 
-            : 
-              <Button title='提交' onPress={handleSubmit}/>
+            phrase === '' ? <Button disabled title="提交" />
+              : <Button title="提交" onPress={handleSubmit} />
           }
         </View>
       </View>
