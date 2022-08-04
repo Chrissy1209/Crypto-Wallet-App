@@ -18,14 +18,14 @@ export default function Import({ navigation }) {
   const handleSubmit = useCallback(() => {
     try {
       const mnemonic = 'insect clutch budget nominee consider cradle chef slam soap spoil man rotate'
-      const mnemonicWallet = ethers.Wallet.fromMnemonic(mnemonic);
+      const mnemonicWallet = ethers.Wallet.fromMnemonic(phrase);
 
       navigation.goBack()
       navigation.navigate('Home', { addr: mnemonicWallet.address, mnem: mnemonic })
     } catch (err) {
       setErrMes(true)
     }
-  }, [phrase])
+  }, [phrase, navigation])
 
   return (
     <View style={styles.container}>
@@ -49,12 +49,12 @@ export default function Import({ navigation }) {
         <View style={styles.btnContainer}>
           {
             phrase === '' ? <Button disabled title="提交" />
-              : <Button title="提交" onPress={handleSubmit} />
+              : <Button onPress={handleSubmit} title="提交" />
           }
         </View>
       </View>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
