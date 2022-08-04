@@ -9,7 +9,7 @@ import { CreateScreen, CreateScreen2 } from './components/create'
 import ImportScreen from './components/import'
 import HomeScreen from './components/home'
 
-const RegisterScreen = React.memo(({ navigation }) => {
+const RenderRegister = React.memo(({ navigation }) => {
   const handleNext = useCallback((goto) => {
     navigation.navigate(goto)
   }, [navigation])
@@ -55,7 +55,7 @@ const ImportStack = createStackNavigator();
 
 const RegisterStackScreen = React.memo(() => (
   <Register.Navigator screenOptions={{ title: ' ' }}>
-    <Register.Screen name="RegisterScreen" component={RegisterScreen} options={{ headerTransparent: false, headerBackTitle: ' ', headerBackImage: () => renderCloseIcon() }} />
+    <Register.Screen name="RegisterScreen" component={RenderRegister} options={{ headerTransparent: false, headerBackTitle: ' ', headerBackImage: () => renderCloseIcon() }} />
   </Register.Navigator>
 ))
 const CreateStackScreen = React.memo(() => (
