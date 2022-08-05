@@ -1,9 +1,10 @@
 import { StyleSheet, View, Button, Text } from 'react-native';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import 'react-native-get-random-values'
 import '@ethersproject/shims'
 import { ethers } from 'ethers'
 import Account from './account'
+import HomeContext from '../src/HomeContext'
 
 const Welcome = React.memo(({ navigation }) => {
   const handleNext = useCallback(() => {
@@ -25,8 +26,6 @@ export default function Home({ navigation, route }) {
   const [address, setAddress] = useState('')
   const [mnemonic, setMnemonic] = useState('')
   const [sendTx, setSendTx] = useState(false)
-  console.log('Home')
-  //---------------
 
   useEffect(() => {
     if (route.params === undefined) setPage('welcome')
@@ -51,10 +50,13 @@ export default function Home({ navigation, route }) {
     }
   }, [route, sendTx])
 
+  const foo = useMemo(() => ({ mnemonic, setSendTx }), [mnemonic]);
   return (
     <View style={styles.container}>
       { page === 'welcome' && <Welcome navigation={navigation} /> }
-      { page === 'account' && <Account address={address} balance={balance} mnemonic={mnemonic} setSendTx={setSendTx} /> }
+      <HomeContext.Provider value={foo}>
+        { page === 'account' && <Account address={address} balance={balance} /> }
+      </HomeContext.Provider>
     </View>
   );
 }

@@ -1,14 +1,16 @@
 import { StyleSheet, View, TouchableOpacity, Text, TextInput } from 'react-native';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useContext } from 'react';
 import 'react-native-get-random-values'
 import '@ethersproject/shims'
 import { ethers } from 'ethers';
+import HomeContext from '../src/HomeContext'
 
-export default function SendTransaction({ address, mnemonic, balance, setPage, setSendTx }) {
+export default function SendTransaction({ address, balance, setPage }) {
   const [addressTo, setAddressTo] = useState('')
   const [amount, setAmount] = useState('')
   const [verifyMes, setVerifyMes] = useState('null')
   const [transaction, setTransaction] = useState(false)
+  const context = useContext(HomeContext)
 
   //---------------
 
@@ -26,7 +28,7 @@ export default function SendTransaction({ address, mnemonic, balance, setPage, s
   }, [])
   const handleAmount = useCallback((e) => {
     if (e === '' || /^\d*\.?\d*$/.test(e)) {
-      if (e[0] === '.' && e.length > 1) setAmount('0' + e) // .1 = 0.1
+      if (e[0] === '.' && e.length > 1) setAmount(`0${e}`) // .1 = 0.1
       else if (e.length === 2 && e === '00') setAmount('0') // 00000 -> 0
       else if (e.length === 2 && e[0] === '0' && e[1] !== '0' && e[1] !== '.') setAmount(e.slice(1, 2)) // 0123 -> 123
       else setAmount(e)
@@ -44,7 +46,7 @@ export default function SendTransaction({ address, mnemonic, balance, setPage, s
       setTransaction(true)
       if (amount === '' || amount === '.' || amount === '0.') setAmount('0')
 
-      const mnemonicWallet = ethers.Wallet.fromMnemonic(mnemonic)
+      const mnemonicWallet = ethers.Wallet.fromMnemonic(context.mnemonic)
       const provider = new ethers.providers.JsonRpcProvider('https://rinkeby.infura.io/v3/ab0bba1edd7c44b28fdf159193f938f2');
       const wallet = new ethers.Wallet(mnemonicWallet.privateKey, provider)
 
@@ -54,7 +56,7 @@ export default function SendTransaction({ address, mnemonic, balance, setPage, s
           value: ethers.utils.parseEther(amount),
         })
         await tx.wait()
-        setSendTx(true)
+        context.setSendTx((pre) => !pre)
         setTransaction(false)
         setPage('account')
         console.log(tx)
@@ -63,7 +65,7 @@ export default function SendTransaction({ address, mnemonic, balance, setPage, s
       }
     }
     sendTx()
-  }, [amount]) // <------------
+  }, [context, setPage, amount])
 
   return (
     <View style={styles.flex}>
@@ -79,11 +81,11 @@ export default function SendTransaction({ address, mnemonic, balance, setPage, s
             <Text style={styles.textGreen}>偵測到錢包位址！</Text>
             {/* ---------------- */}
             <View style={styles.flex}>
-              <View style={[styles.box, { marginTop: 45 }]}>
+              <View style={[styles.box, styles.box1_margin]}>
                 <Text style={styles.subTitle}>資產：</Text>
                 <Text style={styles.fontSize}>{balance == 0 ? 0 : balance}  RinkebyETH</Text>
               </View>
-              <View style={[styles.box, { marginTop: 30, marginBottom: 10 }]}>
+              <View style={[styles.box, styles.box2_margin]}>
                 <Text style={styles.subTitle}>數量：</Text>
                 <TextInput
                   keyboardType="numeric"
@@ -94,7 +96,7 @@ export default function SendTransaction({ address, mnemonic, balance, setPage, s
                 />
                 <Text style={styles.fontSize}>RinkebyETH</Text>
               </View>
-              { amount >= balance && <Text style={[styles.textRed, { textAlign: 'right' }]}>資金不足</Text>}
+              { amount >= balance && <Text style={[styles.textRed, styles.textAlign]}>資金不足</Text>}
             </View>
             { transaction && <Text style={styles.processText}>交易處理中 . . .</Text> }
             {/* ---------------- */}
@@ -110,7 +112,7 @@ export default function SendTransaction({ address, mnemonic, balance, setPage, s
                   : (
                     <TouchableOpacity
                       onPress={handleSendTx}
-                      style={[styles.btn, { backgroundColor: '#007AFF' }]}
+                      style={[styles.btn, styles.bgColor_Blue]}
                     >
                       <Text style={[styles.fontSize, styles.textWhite]}>確認</Text>
                     </TouchableOpacity>
@@ -149,6 +151,9 @@ const styles = StyleSheet.create({
   },
   fontSize: {
     fontSize: 19,
+  },
+  textAlign: {
+    textAlign: 'right',
   },
   textRed: {
     color: 'red',
@@ -202,6 +207,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  box1_margin: {
+    marginTop: 45,
+  },
+  box2_margin: {
+    marginTop: 30,
+    marginBottom: 10,
+  },
   subTitle: {
     fontWeight: '500',
     fontSize: 20,
@@ -226,6 +238,9 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 18,
     justifyContent: 'center',
+  },
+  bgColor_Blue: {
+    backgroundColor: '#007AFF',
   },
   cancelBtn: {
     textAlign: 'right',

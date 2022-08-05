@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react';
 import * as Clipboard from 'expo-clipboard';
 import MyTransaction from './sendTx'
 
-export default function Account({ address, mnemonic, balance, setSendTx }) {
+export default function Account({ address, balance }) {
   const [page, setPage] = useState('account')
   const one = address.substring(0, 5)
   const two = address.substring(38, 42)
@@ -60,7 +60,7 @@ export default function Account({ address, mnemonic, balance, setSendTx }) {
           </View>
         </View>
       )}
-      { page === 'send' && <MyTransaction address={address} balance={balance} mnemonic={mnemonic} setPage={setPage} setSendTx={setSendTx} /> }
+      { page === 'send' && <MyTransaction address={address} balance={balance} setPage={setPage} /> }
     </View>
   )
 }
