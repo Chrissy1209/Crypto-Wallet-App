@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Button } from 'react-native';
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import 'react-native-get-random-values'
 import '@ethersproject/shims'
 import { ethers } from 'ethers';
@@ -9,10 +9,8 @@ export function CreateScreen({ navigation }) {
   const [phrase, setPhrase] = useState('')
   const [address, setAddress] = useState('')
 
-  //---------------
-
   useEffect(() => {
-    const action = () => {
+    const createWallet = () => {
       const wallet = ethers.Wallet.createRandom()
       console.log(wallet)
       console.log('address:', wallet.address)
@@ -21,15 +19,18 @@ export function CreateScreen({ navigation }) {
       setPhrase(wallet.mnemonic.phrase)
       console.log('privateKey:', wallet.privateKey)
     }
-    action()
+    createWallet()
   }, [])
+
+  //---------------
 
   const handleNext = useCallback(() => {
     navigation.push('Create2', { phrase: phrase, address: address })
-  }, [phrase, address])
+  }, [phrase, address, navigation])
+
   const handleDeclaration = useCallback(() => {
     setDeclaration(true)
-  }, [])
+  }, [setDeclaration])
 
   return (
     <View style={styles.container}>
@@ -60,13 +61,25 @@ export function CreateScreen2({ navigation, route }) {
   const [check, setCheck] = useState([])
   const [errMes, setErrMes] = useState(false)
 
-  //---------------
+  const handleSubmit = useCallback(() => {
+    let verify = true
+    check.map((e, index) => {
+      if (e !== phrase[index]) verify = false
+      return true
+    })
+    if (!verify) setErrMes(true)
+    else {
+      navigation.goBack()
+      navigation.goBack()
+      navigation.navigate('Home', { addr: route.params.address, mnem: route.params.phrase })
+    }
+  }, [check, phrase, navigation, route.params.address, route.params.phrase])
 
   return (
     <View style={[styles.container, styles2.container]}>
       <View style={styles2.title}>
         {
-          errMes ? <Text style={[styles2.titleText, { color: 'red' }]}>註記詞錯誤</Text>
+          errMes ? <Text style={[styles2.titleText, styles2.redColor]}>註記詞錯誤</Text>
             : <Text style={styles2.titleText}>確認您已經備份的註記詞</Text>
         }
       </View>
@@ -114,19 +127,7 @@ export function CreateScreen2({ navigation, route }) {
       <View style={styles.btn}>
         {
           check.length === phrase.length
-            ? (
-              <Button
-                onPress={() => {
-                  if (check.every((e, index) => e !== phrase[index])) setErrMes(true)
-                  else {
-                    navigation.goBack()
-                    navigation.goBack()
-                    navigation.navigate('Home', { addr: route.params.address, mnem: route.params.phrase })
-                  }
-                }}
-                title="完成"
-              />
-            )
+            ? <Button onPress={handleSubmit} title="完成" />
             : <Button disabled title="完成" />
         }
       </View>
@@ -215,5 +216,8 @@ const styles2 = StyleSheet.create({
     borderRadius: 8,
     width: '30%',
     margin: 4,
+  },
+  redColor: {
+    color: 'red',
   },
 })

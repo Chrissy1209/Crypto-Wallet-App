@@ -1,15 +1,16 @@
 import { StyleSheet, View, Button, Text } from 'react-native';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import 'react-native-get-random-values'
 import '@ethersproject/shims'
 import { ethers } from 'ethers'
 import Account from './account'
+import HomeContext from '../src/HomeContext'
 
-const Register = React.memo(({ navigation }) => {
+const Welcome = React.memo(({ navigation }) => {
   const handleNext = useCallback(() => {
     navigation.navigate('Register')
   }, [navigation])
-  console.log('Register')
+  console.log('Welcome')
 
   return (
     <View style={styles.subCoiner}>
@@ -25,11 +26,9 @@ export default function Home({ navigation, route }) {
   const [address, setAddress] = useState('')
   const [mnemonic, setMnemonic] = useState('')
   const [sendTx, setSendTx] = useState(false)
-  console.log('Home')
-  //---------------
 
   useEffect(() => {
-    if (route.params === undefined) setPage('register')
+    if (route.params === undefined) setPage('welcome')
     else {
       setAddress(route.params.addr)
       setMnemonic(route.params.mnem)
@@ -51,10 +50,13 @@ export default function Home({ navigation, route }) {
     }
   }, [route, sendTx])
 
+  const foo = useMemo(() => ({ mnemonic, setSendTx }), [mnemonic]);
   return (
     <View style={styles.container}>
-      { page === 'register' && <Register navigation={navigation} /> }
-      { page === 'account' && <Account address={address} balance={balance} mnemonic={mnemonic} setSendTx={setSendTx} /> }
+      { page === 'welcome' && <Welcome navigation={navigation} /> }
+      <HomeContext.Provider value={foo}>
+        { page === 'account' && <Account address={address} balance={balance} /> }
+      </HomeContext.Provider>
     </View>
   );
 }

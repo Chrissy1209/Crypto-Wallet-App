@@ -29,7 +29,10 @@ module.exports = {
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
     'object-curly-newline': 'off',
+    'object-shorthand': 'warn',
+    'react/no-array-index-key': 'warn',
     'react/jsx-one-expression-per-line': 'off',
+    'react/function-component-definition': 'off',
     // 'react/jsx-wrap-multilines': '0ff',
   },
 };
